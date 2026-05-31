@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Álgebra — I° y II° Medio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0e0f14;
+    --panel: #16181f;
+    --panel2: #1e2130;
+    --border: #2a2d3e;
+    --accent1: #f0c040;
+    --accent2: #4fc3f7;
+    --accent3: #a78bfa;
+    --accent4: #6ee7b7;
+    --accent5: #f87171;
+    --text: #e8eaf2;
+    --muted: #7a7f99;
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a1c2a 0%, #0e0f14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--accent1);
+    letter-spacing: -0.5px;
+  }
+  .header-left p {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-bar-wrap span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .progress-bar {
+    width: 160px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* NAV PILLS */
+  .nav-wrap {
+    padding: 16px 32px 0;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-wrap::-webkit-scrollbar { display: none; }
+  .nav-pill {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border-radius: 99px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-pill:hover { border-color: var(--accent1); color: var(--text); }
+  .nav-pill.active {
+    background: var(--accent1);
+    border-color: var(--accent1);
+    color: #0e0f14;
+    font-weight: 700;
+  }
+  .nav-pill .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* SECTIONS */
+  .section {
+    display: none;
+    padding: 28px 32px 40px;
+    animation: fadeUp 0.4s ease;
+  }
+  .section.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+  .section-subtitle {
+    color: var(--muted);
+    font-size: 0.87rem;
+    margin-bottom: 28px;
+  }
+
+  /* CONCEPT CARD */
+  .concept-box {
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .concept-box::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+  }
+  .concept-box.yellow::before { background: var(--accent1); }
+  .concept-box.blue::before { background: var(--accent2); }
+  .concept-box.purple::before { background: var(--accent3); }
+  .concept-box.green::before { background: var(--accent4); }
+  .concept-box.red::before { background: var(--accent5); }
+
+  .concept-box h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .concept-box.yellow h3 { color: var(--accent1); }
+  .concept-box.blue h3 { color: var(--accent2); }
+  .concept-box.purple h3 { color: var(--accent3); }
+  .concept-box.green h3 { color: var(--accent4); }
+  .concept-box.red h3 { color: var(--accent5); }
+
+  .formula-block {
+    background: var(--panel2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin: 12px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    text-align: center;
+    border: 1px solid var(--border);
+    letter-spacing: 0.5px;
+    line-height: 1.8;
+  }
+  .formula-block .highlight { color: var(--accent1); font-weight: 500; }
+  .formula-block .blue { color: var(--accent2); }
+  .formula-block .purple { color: var(--accent3); }
+  .formula-block .green { color: var(--accent4); }
+
+  /* STEPS */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-num.y { background: rgba(240,192,64,0.15); color: var(--accent1); border: 1px solid rgba(240,192,64,0.3); }
+  .step-num.b { background: rgba(79,195,247,0.15); color: var(--accent2); border: 1px solid rgba(79,195,247,0.3); }
+  .step-num.p { background: rgba(167,139,250,0.15); color: var(--accent3); border: 1px solid rgba(167,139,250,0.3); }
+  .step-num.g { background: rgba(110,231,183,0.15); color: var(--accent4); border: 1px solid rgba(110,231,183,0.3); }
+  .step p { font-size: 0.87rem; color: var(--text); line-height: 1.6; }
+  .step p em { font-style: normal; font-family: 'DM Mono', monospace; font-size: 0.83rem; color: var(--accent2); }
+
+  /* EXAMPLE PANEL */
+  .example-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 20px;
+  }
+  @media (max-width: 700px) { .example-grid { grid-template-columns: 1fr; } }
+
+  .example-card {
+    background: var(--panel);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .example-card:hover {
+    border-color: var(--accent1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(240,192,64,0.08);
+  }
+  .example-card .ex-label {
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .example-card .ex-problem {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .example-card .ex-solution {
+    display: none;
+    background: var(--panel2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent4);
+    border-left: 3px solid var(--accent4);
+    margin-top: 8px;
+    line-height: 1.7;
+  }
+  .example-card.revealed .ex-solution { display: block; }
+  .reveal-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  .example-card.revealed .reveal-hint { display: none; }
+
+  /* QUIZ SECTION */
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .quiz-score-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 99px;
+  }
+  .quiz-score-display span { color: var(--accent1); font-weight: 500; }
+
+  .question-card {
+    background: var(--panel);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 18px;
+    transition: border-color 0.3s;
+  }
+  .question-card.correct { border-color: var(--accent4); }
+  .question-card.incorrect { border-color: var(--accent5); }
+
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .q-text .math {
+    font-family: 'DM Mono', monospace;
+    color: var(--accent2);
+    background: rgba(79,195,247,0.08);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+
+  .option-btn {
+    background: var(--panel2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.88rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--accent3);
+    background: rgba(167,139,250,0.08);
+  }
+  .option-btn.correct-opt {
+    border-color: var(--accent4);
+    background: rgba(110,231,183,0.1);
+    color: var(--accent4);
+  }
+  .option-btn.wrong-opt {
+    border-color: var(--accent5);
+    background: rgba(248,113,113,0.08);
+    color: var(--accent5);
+  }
+  .option-btn .opt-letter {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+  }
+  .option-btn.correct-opt .opt-letter { background: rgba(110,231,183,0.2); }
+  .option-btn.wrong-opt .opt-letter { background: rgba(248,113,113,0.2); }
+
+  .q-feedback {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    display: none;
+    line-height: 1.5;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.correct-fb {
+    background: rgba(110,231,183,0.08);
+    border-left: 3px solid var(--accent4);
+    color: var(--accent4);
+  }
+  .q-feedback.wrong-fb {
+    background: rgba(248,113,113,0.08);
+    border-left: 3px solid var(--accent5);
+    color: var(--accent5);
+  }
+
+  /* RESULT PANEL */
+  .result-panel {
+    display: none;
+    background: var(--panel);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px;
+    text-align: center;
+    margin-top: 24px;
+  }
+  .result-panel.show { display: block; }
+  .result-emoji { font-size: 3rem; margin-bottom: 16px; }
+  .result-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+  .result-score {
+    font-family: 'DM Mono', monospace;
+    font-size: 2.4rem;
+    font-weight: 500;
+    color: var(--accent1);
+    margin: 16px 0;
+  }
+  .result-nota {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .result-nota strong { color: var(--text); }
+
+  /* Student selector */
+  .student-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .student-btn {
+    padding: 9px 18px;
+    border-radius: 99px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    transition: all 0.2s;
+  }
+  .student-btn.active {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: #1a1020;
+    font-weight: 700;
+  }
+
+  .btn-primary {
+    background: var(--accent1);
+    color: #0e0f14;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #ffd060; transform: translateY(-1px); }
+
+  .info-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin: 4px;
+  }
+  .info-chip .chip-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Sistema ecuaciones special layout */
+  .system-eq {
+    font-family: 'DM Mono', monospace;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: inline-block;
+    line-height: 2.2;
+    position: relative;
+  }
+  .system-eq::before {
+    content: '{';
+    font-size: 2.5rem;
+    line-height: 1;
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent1);
+    font-weight: 300;
+  }
+  .system-eq-inner {
+    padding-left: 18px;
+  }
+  .system-eq .eq1 { color: var(--accent2); }
+  .system-eq .eq2 { color: var(--accent3); }
+
+  /* Steps horizontal timeline */
+  .method-steps {
+    display: flex;
+    gap: 0;
+    margin: 20px 0;
+    position: relative;
+  }
+  .method-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .method-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .method-step .ms-circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .method-step:nth-child(1) .ms-circle { border-color: var(--accent1); color: var(--accent1); }
+  .method-step:nth-child(2) .ms-circle { border-color: var(--accent2); color: var(--accent2); }
+  .method-step:nth-child(3) .ms-circle { border-color: var(--accent3); color: var(--accent3); }
+  .method-step:nth-child(4) .ms-circle { border-color: var(--accent4); color: var(--accent4); }
+  .method-step .ms-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.4;
+    padding: 0 4px;
+  }
+
+  .scores-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+    margin-top: 16px;
+  }
+  .scores-table th {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .scores-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(42,45,62,0.5);
+  }
+  .scores-table tr:last-child td { border-bottom: none; }
+  .nota-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+  .nota-badge.high { background: rgba(110,231,183,0.15); color: var(--accent4); }
+  .nota-badge.mid { background: rgba(240,192,64,0.15); color: var(--accent1); }
+  .nota-badge.low { background: rgba(248,113,113,0.15); color: var(--accent5); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>📐 Álgebra — I° y II° Medio</h1>
+    <p>Depto. Matemática</p>
+  </div>
+  <div class="progress-bar-wrap">
+    <span id="progress-label">0 / 5</span>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <button class="nav-pill active" onclick="showSection('s0', this)"><span class="dot"></span>Inicio</button>
+  <button class="nav-pill" onclick="showSection('s1', this)"><span class="dot"></span>Factor Común</button>
+  <button class="nav-pill" onclick="showSection('s2', this)"><span class="dot"></span>Diferencia de Cuadrados</button>
+  <button class="nav-pill" onclick="showSection('s3', this)"><span class="dot"></span>Trinomio Cuadrado Perfecto</button>
+  <button class="nav-pill" onclick="showSection('s4', this)"><span class="dot"></span>Trinomio Ordenado</button>
+  <button class="nav-pill" onclick="showSection('s5', this)"><span class="dot"></span>Ecuación Lineal</button>
+  <button class="nav-pill" onclick="showSection('quiz', this)"><span class="dot"></span>🎯 Quiz</button>
+</div>
+
+<!-- ==================== SECCIÓN 0: INICIO ==================== -->
+<div class="section active" id="s0">
+  <div class="section-title" style="color:var(--accent1)">Bienvenidos 👋</div>
+  <div class="section-subtitle">Guías N°15, 16 y 17 · Productos Notables y Ecuaciones</div>
+
+  <div class="two-col">
+    <div class="concept-box yellow">
+      <h3>📚 Contenidos de hoy</h3>
+      <p style="font-size:0.87rem; line-height:1.8; color:var(--muted)">
+        Exploraremos <strong style="color:var(--text)">5 técnicas de factorización</strong> y ecuaciones lineales, paso a paso con ejemplos interactivos.
+      </p>
+      <div style="margin-top:14px; display:flex; flex-wrap:wrap;">
+        <span class="info-chip"><span class="chip-dot" style="background:var(--accent1)"></span>Factor Común</span>
+        <span class="info-chip"><span class="chip-dot" style="background:var(--accent2)"></span>Diferencia de Cuadrados</span>
+        <span class="info-chip"><span class="chip-dot" style="background:var(--accent3)"></span>Trinomio Cuadrado Perfecto</span>
+        <span class="info-chip"><span class="chip-dot" style="background:var(--accent4)"></span>Trinomio Ordenado</span>
+        <span class="info-chip"><span class="chip-dot" style="background:var(--accent5)"></span>Ecuación Lineal</span>
+      </div>
+    </div>
+    <div class="concept-box blue">
+      <h3>🎯 Objetivo de aprendizaje</h3>
+      <p style="font-size:0.87rem; line-height:1.8; color:var(--muted)">
+        Al finalizar, podrás <strong style="color:var(--text)">factorizar expresiones algebraicas</strong> usando el método correcto y resolver sistemas de ecuaciones lineales.
+      </p>
+      <div style="margin-top:16px">
+        <button class="btn-primary" onclick="showSection('s1', document.querySelectorAll('.nav-pill')[1])">
+          Comenzar →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-title" style="font-size:1.1rem; color:var(--muted)">Resumen de técnicas</div>
+  <div style="margin-top:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px;">
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px;">
+      <div style="font-size:1.4rem; margin-bottom:8px">🔧</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--accent1); margin-bottom:4px">Factor Común</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted)">ab ± ac = a(b ± c)</div>
+    </div>
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px;">
+      <div style="font-size:1.4rem; margin-bottom:8px">⬜</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--accent2); margin-bottom:4px">Diferencia de Cuadrados</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted)">x² - y² = (x+y)(x-y)</div>
+    </div>
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px;">
+      <div style="font-size:1.4rem; margin-bottom:8px">💎</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--accent3); margin-bottom:4px">Trinomio Cuad. Perfecto</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted)">x²±2xy+y² = (x±y)²</div>
+    </div>
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px;">
+      <div style="font-size:1.4rem; margin-bottom:8px">📋</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--accent4); margin-bottom:4px">Trinomio Ordenado</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted)">x²+bx+c = (x+p)(x+q)</div>
+    </div>
+    <div style="background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px;">
+      <div style="font-size:1.4rem; margin-bottom:8px">📏</div>
+      <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; color:var(--accent5); margin-bottom:4px">Sistema Ecuaciones</div>
+      <div style="font-family:'DM Mono',monospace; font-size:0.8rem; color:var(--muted)">Método de igualación</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECCIÓN 1: FACTOR COMÚN ==================== -->
+<div class="section" id="s1">
+  <div class="section-title" style="color:var(--accent1)">🔧 Factor Común</div>
+  <div class="section-subtitle">Guía N°15 · Extrae el elemento común de todos los términos</div>
+
+  <div class="concept-box yellow">
+    <h3>¿Qué es el Factor Común?</h3>
+    <p style="font-size:0.87rem; color:var(--muted); line-height:1.6; margin-bottom:12px">
+      Es un elemento (número o letra) que está presente en <strong style="color:var(--text)">todos los términos</strong> de una expresión algebraica.
+    </p>
+    <div class="formula-block">
+      <span class="highlight">ab ± ac</span> = <span class="blue">a</span>(<span class="highlight">b ± c</span>)
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num y">1</div>
+        <p>Identifica el número o letra que <strong>aparece en TODOS los términos</strong>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num y">2</div>
+        <p><strong>Extrae</strong> el factor común y escríbelo fuera del paréntesis.</p>
+      </div>
+      <div class="step">
+        <div class="step-num y">3</div>
+        <p>Dentro del paréntesis escribe lo que <strong>queda</strong> de cada término al dividir por el factor.</p>
+      </div>
+      <div class="step">
+        <div class="step-num y">4</div>
+        <p><strong>Verifica</strong> distribuyendo: el resultado debe ser la expresión original.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--muted); margin-bottom:14px">
+    💡 Haz clic en cada ejemplo para ver la solución
+  </div>
+
+  <div class="example-grid">
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 1 · Básico</div>
+      <div class="ex-problem">x + 2xy = ?</div>
+      <div class="ex-solution">Factor común: x<br>= <strong>x(1 + 2y)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 2 · Con 3 términos</div>
+      <div class="ex-problem">ax + bx + cx = ?</div>
+      <div class="ex-solution">Factor común: x<br>= <strong>x(a + b + c)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 3 · Con número</div>
+      <div class="ex-problem">6x + 12 = ?</div>
+      <div class="ex-solution">Factor común: 6<br>= <strong>6(x + 2)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 4 · Cuadrático</div>
+      <div class="ex-problem">x² + x = ?</div>
+      <div class="ex-solution">Factor común: x<br>= <strong>x(x + 1)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 5 · Potencias</div>
+      <div class="ex-problem">y² + y³ - y = ?</div>
+      <div class="ex-solution">Factor común: y<br>= <strong>y(y + y² - 1)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 6 · Mixto</div>
+      <div class="ex-problem">10y³ - 16y + 2y² = ?</div>
+      <div class="ex-solution">Factor común: 2y<br>= <strong>2y(5y² - 8 + y)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 7 · Mayor extracción</div>
+      <div class="ex-problem">12x⁴ + 6x²y - 18x³ = ?</div>
+      <div class="ex-solution">Factor común: 6x²<br>= <strong>6x²(2x² + y - 3x)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejemplo 8 · xyz</div>
+      <div class="ex-problem">xyz - 2x = ?</div>
+      <div class="ex-solution">Factor común: x<br>= <strong>x(yz - 2)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver solución</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECCIÓN 2: DIFERENCIA DE CUADRADOS ==================== -->
+<div class="section" id="s2">
+  <div class="section-title" style="color:var(--accent2)">⬜ Diferencia de Cuadrados</div>
+  <div class="section-subtitle">Guía N°15 · Factorización inversa a (a+b)(a-b)</div>
+
+  <div class="concept-box blue">
+    <h3>La fórmula clave</h3>
+    <p style="font-size:0.87rem; color:var(--muted); line-height:1.6; margin-bottom:12px">
+      Si tienes una <strong style="color:var(--text)">resta de dos cuadrados perfectos</strong>, puedes factorizar así:
+    </p>
+    <div class="formula-block">
+      <span class="blue">x²</span> − <span class="highlight">y²</span> = (<span class="blue">x</span> + <span class="highlight">y</span>)(<span class="blue">x</span> − <span class="highlight">y</span>)
+    </div>
+    <div class="formula-block">
+      Ejemplo: x² − 64 = (x)² − (8)² = <strong style="color:var(--accent4)">(x + 8)(x − 8)</strong>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num b">1</div>
+        <p>Identifica las <strong>raíces cuadradas</strong> de ambos términos.</p>
+      </div>
+      <div class="step">
+        <div class="step-num b">2</div>
+        <p>Escribe dos factores: uno con <em>suma</em> y otro con <em>diferencia</em>: <em>(√a + √b)(√a − √b)</em></p>
+      </div>
+      <div class="step">
+        <div class="step-num b">3</div>
+        <p>Verifica multiplicando usando (a+b)(a-b) = a² - b²</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--panel); border:1px solid rgba(248,113,113,0.3); border-radius:12px; padding:16px; margin: 16px 0;">
+    <div style="color:var(--accent5); font-weight:700; font-size:0.85rem; margin-bottom:8px">⚠️ Recuerda</div>
+    <div style="font-size:0.85rem; color:var(--muted); line-height:1.7">
+      Debe ser una <strong style="color:var(--text)">resta</strong> (no suma) y <strong style="color:var(--text)">ambos términos son cuadrados perfectos</strong>.<br>
+      Cuadrados perfectos: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169…
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="example-grid">
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 1</div>
+      <div class="ex-problem">a² − b² = ?</div>
+      <div class="ex-solution">= <strong>(a + b)(a − b)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 2</div>
+      <div class="ex-problem">n² − m² = ?</div>
+      <div class="ex-solution">= <strong>(n + m)(n − m)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 3</div>
+      <div class="ex-problem">a² − 64 = ?</div>
+      <div class="ex-solution">√64 = 8<br>= <strong>(a + 8)(a − 8)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 4</div>
+      <div class="ex-problem">x² − 9 = ?</div>
+      <div class="ex-solution">√9 = 3<br>= <strong>(x + 3)(x − 3)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 5</div>
+      <div class="ex-problem">9a² − 25 = ?</div>
+      <div class="ex-solution">√9a² = 3a · √25 = 5<br>= <strong>(3a + 5)(3a − 5)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 6</div>
+      <div class="ex-problem">4x² − y² = ?</div>
+      <div class="ex-solution">√4x² = 2x · √y² = y<br>= <strong>(2x + y)(2x − y)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 7 · Difícil</div>
+      <div class="ex-problem">144x⁶ − 36 = ?</div>
+      <div class="ex-solution">√144x⁶ = 12x³ · √36 = 6<br>= <strong>(12x³ + 6)(12x³ − 6)</strong><br>= <strong>6(2x³+1)·6(2x³−1)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 8 · Difícil</div>
+      <div class="ex-problem">169a² − 25b² = ?</div>
+      <div class="ex-solution">√169a² = 13a · √25b² = 5b<br>= <strong>(13a + 5b)(13a − 5b)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECCIÓN 3: TRINOMIO CUADRADO PERFECTO ==================== -->
+<div class="section" id="s3">
+  <div class="section-title" style="color:var(--accent3)">💎 Trinomio Cuadrado Perfecto</div>
+  <div class="section-subtitle">Proceso inverso del Binomio al cuadrado</div>
+
+  <div class="concept-box purple">
+    <h3>La fórmula</h3>
+    <p style="font-size:0.87rem; color:var(--muted); line-height:1.6; margin-bottom:12px">
+      El 1er y 3er término deben ser <strong style="color:var(--text)">cuadrados perfectos</strong>. El 2do término debe ser el <strong style="color:var(--text)">DOBLE del producto</strong> de las raíces del 1er y 3er término.
+    </p>
+    <div class="formula-block">
+      <span class="blue">x²</span> + <span class="highlight">2·x·y</span> + <span class="purple">y²</span> = (<span class="blue">x</span> + <span class="purple">y</span>)²
+    </div>
+    <div class="formula-block">
+      <span class="blue">x²</span> − <span class="highlight">2·x·y</span> + <span class="purple">y²</span> = (<span class="blue">x</span> − <span class="purple">y</span>)²
+    </div>
+  </div>
+
+  <div style="background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; margin:16px 0;">
+    <div style="font-family:'Syne',sans-serif; font-weight:700; color:var(--accent3); margin-bottom:12px">🔍 Checklist para reconocerlo</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num p">✓</div>
+        <p>¿El <strong>1er término</strong> es un cuadrado perfecto? → <em>x², a², 4x², 25y²...</em></p>
+      </div>
+      <div class="step">
+        <div class="step-num p">✓</div>
+        <p>¿El <strong>3er término</strong> es un cuadrado perfecto? → <em>9, 16, 25, 49...</em></p>
+      </div>
+      <div class="step">
+        <div class="step-num p">✓</div>
+        <p>¿El <strong>2do término</strong> = 2 × (√1er) × (√3er)? → Verifica el coeficiente.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="example-grid">
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 1</div>
+      <div class="ex-problem">x² + 6x + 9 = ?</div>
+      <div class="ex-solution">√x²=x · √9=3 · 2(x)(3)=6✓<br>= <strong>(x + 3)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 2</div>
+      <div class="ex-problem">x² + 10x + 25 = ?</div>
+      <div class="ex-solution">√x²=x · √25=5 · 2(x)(5)=10✓<br>= <strong>(x + 5)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 3 · Resta</div>
+      <div class="ex-problem">a² − 8x + 16 = ?</div>
+      <div class="ex-solution">√a²=a · √16=4 · 2(a)(4)=8✓<br>= <strong>(a − 4)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 4 · Coef.</div>
+      <div class="ex-problem">4x² + 4x + 1 = ?</div>
+      <div class="ex-solution">√4x²=2x · √1=1 · 2(2x)(1)=4✓<br>= <strong>(2x + 1)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 5</div>
+      <div class="ex-problem">25y² − 10y + 1 = ?</div>
+      <div class="ex-solution">√25y²=5y · √1=1 · 2(5y)(1)=10✓<br>= <strong>(5y − 1)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 6</div>
+      <div class="ex-problem">n² − 14n + 49 = ?</div>
+      <div class="ex-solution">√n²=n · √49=7 · 2(n)(7)=14✓<br>= <strong>(n − 7)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 7 · Dos variables</div>
+      <div class="ex-problem">9q² + 48qr + 64r² = ?</div>
+      <div class="ex-solution">√9q²=3q · √64r²=8r<br>2(3q)(8r)=48qr✓<br>= <strong>(3q + 8r)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 8 · Dos variables</div>
+      <div class="ex-problem">m² + 20mp + 100p = ?</div>
+      <div class="ex-solution">√m²=m · √100p²=10p<br>2(m)(10p)=20mp✓<br>= <strong>(m + 10p)²</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECCIÓN 4: TRINOMIO ORDENADO ==================== -->
+<div class="section" id="s4">
+  <div class="section-title" style="color:var(--accent4)">📋 Trinomio Ordenado</div>
+  <div class="section-subtitle">Factorización como producto de dos binomios con un término común</div>
+
+  <div class="concept-box green">
+    <h3>La fórmula</h3>
+    <p style="font-size:0.87rem; color:var(--muted); line-height:1.6; margin-bottom:12px">
+      Es el proceso inverso de multiplicar dos binomios con término común.
+    </p>
+    <div class="formula-block">
+      <span class="blue">x²</span> + <span class="highlight">b</span>x + <span class="green">c</span> = (x + <span class="highlight">p</span>)(x + <span class="green">q</span>)
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+      <div class="formula-block" style="font-size:0.9rem">
+        <span class="highlight">p + q = b</span><br>
+        <span style="font-size:0.75rem; color:var(--muted)">(suman el coef. de x)</span>
+      </div>
+      <div class="formula-block" style="font-size:0.9rem">
+        <span class="green">p · q = c</span><br>
+        <span style="font-size:0.75rem; color:var(--muted)">(multiplican el término independiente)</span>
+      </div>
+    </div>
+    <div class="steps" style="margin-top:14px">
+      <div class="step">
+        <div class="step-num g">1</div>
+        <p>Busca dos números <em>p</em> y <em>q</em> que <strong>sumen b</strong> y <strong>multipliquen c</strong>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num g">2</div>
+        <p>Escribe el resultado como <em>(x + p)(x + q)</em>.</p>
+      </div>
+      <div class="step">
+        <div class="step-num g">3</div>
+        <p>Si el coeficiente de x² no es 1, busca primero el factor común.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="example-grid">
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 1</div>
+      <div class="ex-problem">x² + 8x + 12 = ?</div>
+      <div class="ex-solution">p+q=8 · p·q=12<br>p=2, q=6 (2+6=8 ✓, 2×6=12 ✓)<br>= <strong>(x + 2)(x + 6)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 2</div>
+      <div class="ex-problem">x² + 16x + 48 = ?</div>
+      <div class="ex-solution">p+q=16 · p·q=48<br>p=4, q=12 (4+12=16 ✓, 4×12=48 ✓)<br>= <strong>(x + 4)(x + 12)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 3 · Negativo</div>
+      <div class="ex-problem">a² − 12a + 35 = ?</div>
+      <div class="ex-solution">p+q=-12 · p·q=35<br>p=-5, q=-7<br>= <strong>(a − 5)(a − 7)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 4</div>
+      <div class="ex-problem">b² − 13b + 30 = ?</div>
+      <div class="ex-solution">p+q=-13 · p·q=30<br>p=-3, q=-10<br>= <strong>(b − 3)(b − 10)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 5 · Signos mixtos</div>
+      <div class="ex-problem">a² + 14a − 13 = ?</div>
+      <div class="ex-solution">p+q=14 · p·q=-13<br>p=13, q=1<br>= <strong>(a − 1)(a + 13)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 6 · Signos mixtos</div>
+      <div class="ex-problem">x² + 7x − 44 = ?</div>
+      <div class="ex-solution">p+q=7 · p·q=-44<br>p=11, q=-4<br>= <strong>(x + 11)(x − 4)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 7 · Difícil</div>
+      <div class="ex-problem">x² − 6x − 16 = ?</div>
+      <div class="ex-solution">p+q=-6 · p·q=-16<br>p=-8, q=2<br>= <strong>(x − 8)(x + 2)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ejercicio 8</div>
+      <div class="ex-problem">y² − 10y − 75 = ?</div>
+      <div class="ex-solution">p+q=-10 · p·q=-75<br>p=-15, q=5<br>= <strong>(y − 15)(y + 5)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECCIÓN 5: ECUACIÓN LINEAL ==================== -->
+<div class="section" id="s5">
+  <div class="section-title" style="color:var(--accent5)">📏 Ecuación Lineal y Sistemas</div>
+  <div class="section-subtitle">Guías N°16 y N°17 · Dos incógnitas · Método de igualación</div>
+
+  <div class="two-col" style="gap:14px">
+    <div class="concept-box red">
+      <h3>Ecuación Lineal con 2 incógnitas</h3>
+      <p style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:12px">
+        Tiene la forma <strong style="color:var(--text)">ax + by = c</strong> donde a, b, c son números racionales (a≠0, b≠0).
+      </p>
+      <div class="formula-block" style="font-size:0.85rem">
+        y = −<span class="highlight">a/b</span>·x + <span class="blue">c/b</span>
+      </div>
+      <p style="font-size:0.82rem; color:var(--muted); margin-top:10px">
+        Tiene <strong style="color:var(--text)">infinitas soluciones</strong>: cualquier par (x, y) que satisfaga la ecuación.
+      </p>
+    </div>
+    <div class="concept-box red">
+      <h3>Sistema de Ecuaciones</h3>
+      <p style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:12px">
+        Dos ecuaciones con las mismas incógnitas. Se busca el <strong style="color:var(--text)">par (x, y) que satisface ambas</strong> simultáneamente.
+      </p>
+      <div style="text-align:center; margin-top:8px;">
+        <div class="system-eq">
+          <div class="system-eq-inner">
+            <div class="eq1">3x + 8y = 75</div>
+            <div class="eq2">−x + 4y = 35</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--accent5); margin-bottom:16px">
+      Método de Igualación — 4 pasos
+    </div>
+    <div class="method-steps">
+      <div class="method-step">
+        <div class="ms-circle">1</div>
+        <div class="ms-label">Despeja la misma incógnita en ambas ecuaciones</div>
+      </div>
+      <div class="method-step">
+        <div class="ms-circle">2</div>
+        <div class="ms-label">Iguala las expresiones obtenidas</div>
+      </div>
+      <div class="method-step">
+        <div class="ms-circle">3</div>
+        <div class="ms-label">Resuelve para la incógnita restante</div>
+      </div>
+      <div class="method-step">
+        <div class="ms-circle">4</div>
+        <div class="ms-label">Reemplaza y verifica la solución</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="concept-box blue" style="margin-bottom:16px">
+    <h3>Ejemplo resuelto paso a paso</h3>
+    <div style="font-size:0.85rem; color:var(--muted); margin-bottom:12px">Sistema: <strong style="color:var(--text)">6x + 2y = 0</strong> y <strong style="color:var(--text)">−3x + 2y = 9</strong></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num b">1</div>
+        <p><strong>Despeja y:</strong><br>
+          Ec.1: <em>2y = −6x → y = −3x</em><br>
+          Ec.2: <em>2y = 9 + 3x → y = (9 + 3x)/2</em>
+        </p>
+      </div>
+      <div class="step">
+        <div class="step-num b">2</div>
+        <p><strong>Iguala:</strong> <em>−3x = (9 + 3x)/2</em></p>
+      </div>
+      <div class="step">
+        <div class="step-num b">3</div>
+        <p><strong>Resuelve:</strong> <em>−6x = 9 + 3x → −9x = 9 → x = −1</em></p>
+      </div>
+      <div class="step">
+        <div class="step-num b">4</div>
+        <p><strong>Reemplaza:</strong> <em>y = −3(−1) = 3</em><br>
+          ∴ <strong style="color:var(--accent4)">(x, y) = (−1, 3)</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="example-grid">
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Sistema a</div>
+      <div class="ex-problem">2x + 5y = 26<br>x + 2y = 11</div>
+      <div class="ex-solution">De Ec.2: x = 11 - 2y<br>Reemplaza: 2(11-2y)+5y=26<br>22-4y+5y=26 → y=4<br>x=11-8=3<br>→ <strong>(x,y) = (3, 4)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Sistema b</div>
+      <div class="ex-problem">5x − 2y = −4<br>3x + 4y = −18</div>
+      <div class="ex-solution">De Ec.1: 2y=5x+4 → y=(5x+4)/2<br>Reemplaza en Ec.2: 3x+4·(5x+4)/2=-18<br>3x+2(5x+4)=-18 → 13x=-26 → x=-2<br>y=(5(-2)+4)/2=-3<br>→ <strong>(x,y) = (−2, −3)</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Sistema c</div>
+      <div class="ex-problem">2x + 3y = −14<br>x − 6y = −60</div>
+      <div class="ex-solution">De Ec.2: x = 6y - 60<br>Reemplaza: 2(6y-60)+3y=-14<br>12y-120+3y=-14 → 15y=106 → y=7.07<br>→ <strong>(x,y) ≈ (−17.6, 7.07)</strong><br><span style="color:var(--muted);font-size:0.78rem">Verificar: no valores enteros</span></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+    <div class="example-card" onclick="revealExample(this)">
+      <div class="ex-label">Ecuación lineal · Verificar</div>
+      <div class="ex-problem">¿Es 2x − y = 1 válida para x=0, y=−1?</div>
+      <div class="ex-solution">Reemplaza: 2(0) − (−1) = 0 + 1 = 1 ✓<br>→ <strong>Sí, (0, −1) es solución</strong></div>
+      <div class="reveal-hint">👆 Clic para ver</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div class="section" id="quiz">
+  <div class="quiz-header">
+    <div>
+      <div class="section-title" style="color:var(--accent1)">🎯 Quiz Final</div>
+      <div class="section-subtitle">Selecciona un estudiante y responde las preguntas</div>
+    </div>
+    <div class="quiz-score-display">Puntaje: <span id="score-display">0</span> / <span id="total-display">0</span></div>
+  </div>
+
+  <div class="student-selector">
+    <button class="student-btn active" onclick="selectStudent(this, 'Estudiante 1')">👤 Estudiante 1</button>
+    <button class="student-btn" onclick="selectStudent(this, 'Estudiante 2')">👤 Estudiante 2</button>
+    <button class="student-btn" onclick="selectStudent(this, 'Estudiante 3')">👤 Estudiante 3</button>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div class="result-panel" id="result-panel">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <div class="result-title" id="result-title">¡Excelente!</div>
+    <div class="result-score" id="result-score-val">0 / 15</div>
+    <div class="result-nota" id="result-nota">Nota: <strong>7.0</strong></div>
+    <button class="btn-primary" onclick="resetQuiz()" style="margin-top:8px">↺ Reintentar</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--muted); margin-bottom:12px">
+    📊 Tabla de puntajes
+  </div>
+  <table class="scores-table" id="scores-table">
+    <thead>
+      <tr>
+        <th>Estudiante</th>
+        <th>Puntaje</th>
+        <th>% Logro</th>
+        <th>Nota</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody id="scores-tbody">
+      <tr><td colspan="5" style="color:var(--muted); text-align:center; padding:20px">Sin puntajes aún</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+// ============= NAV =============
+let sectionsVisited = new Set(['s0']);
+
+function showSection(id, pill) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  pill.classList.add('active');
+  sectionsVisited.add(id);
+  updateProgress();
+  if (id === 'quiz') buildQuiz();
+}
+
+function updateProgress() {
+  const total = 5;
+  const count = Math.min(sectionsVisited.size, total);
+  document.getElementById('progress-label').textContent = count + ' / ' + total;
+  document.getElementById('progress-fill').style.width = (count/total*100) + '%';
+}
+
+// ============= EXAMPLES =============
+function revealExample(card) {
+  card.classList.toggle('revealed');
+}
+
+// ============= QUIZ DATA =============
+const questions = [
+  {
+    topic: 'Factor Común',
+    text: 'Factoriza: <span class="math">6x + 12</span>',
+    options: ['6(x + 12)', '6(x + 2)', '3(2x + 4)', '6x(1 + 2)'],
+    correct: 1,
+    feedback: 'El factor común es 6. Al dividir: 6x/6 = x, 12/6 = 2. Resultado: 6(x + 2)'
+  },
+  {
+    topic: 'Factor Común',
+    text: 'Factoriza: <span class="math">x² + x</span>',
+    options: ['x(x + 1)', 'x²(1 + x)', 'x + x', '(x)(x) + 1'],
+    correct: 0,
+    feedback: 'El factor común es x. Al dividir: x²/x = x, x/x = 1. Resultado: x(x + 1)'
+  },
+  {
+    topic: 'Diferencia de Cuadrados',
+    text: 'Factoriza: <span class="math">x² − 9</span>',
+    options: ['(x − 3)(x − 3)', '(x + 9)(x − 1)', '(x + 3)(x − 3)', '(x − 9)(x + 1)'],
+    correct: 2,
+    feedback: '√x² = x y √9 = 3. Diferencia de cuadrados: (x + 3)(x − 3)'
+  },
+  {
+    topic: 'Diferencia de Cuadrados',
+    text: 'Factoriza: <span class="math">9a² − 25</span>',
+    options: ['(3a + 5)(3a − 5)', '(9a + 5)(a − 5)', '(3a − 5)²', '3(a + 5)(a − 5)'],
+    correct: 0,
+    feedback: '√9a² = 3a y √25 = 5. Resultado: (3a + 5)(3a − 5)'
+  },
+  {
+    topic: 'Diferencia de Cuadrados',
+    text: '¿Cuál NO es una diferencia de cuadrados?',
+    options: ['a² − b²', 'x² − 9', 'x² + 4', '4a² − 1'],
+    correct: 2,
+    feedback: 'x² + 4 es una SUMA, no una diferencia. La diferencia de cuadrados requiere una resta entre dos cuadrados perfectos.'
+  },
+  {
+    topic: 'Trinomio Cuadrado Perfecto',
+    text: 'Factoriza: <span class="math">x² + 6x + 9</span>',
+    options: ['(x + 3)(x − 3)', '(x + 9)(x + 1)', '(x + 3)²', '(x − 3)²'],
+    correct: 2,
+    feedback: '√x²=x, √9=3, y 2·x·3=6x (el término medio). Resultado: (x + 3)²'
+  },
+  {
+    topic: 'Trinomio Cuadrado Perfecto',
+    text: 'Factoriza: <span class="math">4x² + 4x + 1</span>',
+    options: ['(4x + 1)²', '(2x + 1)²', '(2x − 1)²', '4(x + 1)²'],
+    correct: 1,
+    feedback: '√4x²=2x, √1=1, y 2·2x·1=4x (término medio ✓). Resultado: (2x + 1)²'
+  },
+  {
+    topic: 'Trinomio Cuadrado Perfecto',
+    text: 'Factoriza: <span class="math">a² − 8a + 16</span>',
+    options: ['(a + 4)²', '(a − 4)²', '(a − 8)(a + 2)', '(a − 2)(a − 8)'],
+    correct: 1,
+    feedback: '√a²=a, √16=4, y 2·a·4=8a (término medio con signo negativo). Resultado: (a − 4)²'
+  },
+  {
+    topic: 'Trinomio Ordenado',
+    text: 'Factoriza: <span class="math">x² + 8x + 12</span>',
+    options: ['(x + 2)(x + 6)', '(x + 3)(x + 4)', '(x + 12)(x + 1)', '(x + 8)(x + 4)'],
+    correct: 0,
+    feedback: 'Necesitamos p+q=8 y p·q=12. Los números 2 y 6 cumplen: 2+6=8 ✓, 2×6=12 ✓. Resultado: (x+2)(x+6)'
+  },
+  {
+    topic: 'Trinomio Ordenado',
+    text: 'Factoriza: <span class="math">a² − 12a + 35</span>',
+    options: ['(a − 5)(a − 7)', '(a + 5)(a + 7)', '(a − 5)(a + 7)', '(a − 35)(a − 1)'],
+    correct: 0,
+    feedback: 'p+q=-12 y p·q=35. Los números -5 y -7: (-5)+(-7)=-12 ✓, (-5)×(-7)=35 ✓. Resultado: (a−5)(a−7)'
+  },
+  {
+    topic: 'Trinomio Ordenado',
+    text: 'Factoriza: <span class="math">x² + 7x − 44</span>',
+    options: ['(x − 4)(x + 11)', '(x + 4)(x − 11)', '(x − 22)(x + 2)', '(x + 44)(x − 1)'],
+    correct: 0,
+    feedback: 'p+q=7 y p·q=-44. Los números 11 y -4: 11+(-4)=7 ✓, 11×(-4)=-44 ✓. Resultado: (x+11)(x−4)'
+  },
+  {
+    topic: 'Ecuación Lineal',
+    text: '¿Cuál es una ecuación lineal con dos incógnitas?',
+    options: ['-x + 8y² = 1', '6y + 8y = 12', '4x + 5y = 9', 'x² + 4y² = 10'],
+    correct: 2,
+    feedback: '4x + 5y = 9 tiene la forma ax + by = c con a≠0, b≠0 y ambas incógnitas de grado 1. Las otras tienen variables cuadradas o solo una variable.'
+  },
+  {
+    topic: 'Sistema de Ecuaciones',
+    text: 'En el sistema <span class="math">6x + 2y = 0 / −3x + 2y = 9</span>, ¿cuánto vale x?',
+    options: ['x = 1', 'x = −1', 'x = 3', 'x = −3'],
+    correct: 1,
+    feedback: 'Despejando y en ambas y aplicando igualación: −3x = (9+3x)/2 → −6x = 9+3x → −9x = 9 → x = −1'
+  },
+  {
+    topic: 'Sistema de Ecuaciones',
+    text: 'Para el sistema <span class="math">2x + 5y = 26 / x + 2y = 11</span>, ¿cuál es la solución?',
+    options: ['(x,y) = (3, 4)', '(x,y) = (4, 3)', '(x,y) = (1, 5)', '(x,y) = (−3, −4)'],
+    correct: 0,
+    feedback: 'De Ec.2: x = 11-2y. Reemplazando en Ec.1: 2(11-2y)+5y=26 → 22+y=26 → y=4. Luego x=11-8=3. Solución: (3,4)'
+  },
+  {
+    topic: 'Aplicación',
+    text: 'Carlos llevó a sus nietos al teatro. La 1ra vez pagó $15.000 por 2 adultos y 2 niños. La 2da vez pagó $13.500 por 1 adulto y 3 niños. Si a = adulto y n = niño, ¿cuál es el sistema correcto?',
+    options: [
+      '2a + 2n = 15000 / a + 3n = 13500',
+      '2a + n = 15000 / a + 3n = 13500',
+      'a + 2n = 15000 / a + 3n = 13500',
+      '2a + 2n = 13500 / a + 3n = 15000'
+    ],
+    correct: 0,
+    feedback: 'La 1ra visita fue 2 adultos + 2 niños = $15.000, y la 2da fue 1 adulto + 3 niños = $13.500. Sistema: 2a+2n=15000 / a+3n=13500'
+  }
+];
+
+// ============= QUIZ ENGINE =============
+let currentStudent = 'Estudiante 1';
+let answered = {};
+let scores = {};
+
+function selectStudent(btn, name) {
+  document.querySelectorAll('.student-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentStudent = name;
+  answered = {};
+  buildQuiz();
+  document.getElementById('result-panel').classList.remove('show');
+}
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  let html = '';
+  questions.forEach((q, i) => {
+    const state = answered[i];
+    const isAnswered = state !== undefined;
+    const cardClass = isAnswered ? (state.correct ? 'correct' : 'incorrect') : '';
+    html += `<div class="question-card ${cardClass}" id="qcard-${i}">
+      <div class="q-num">Pregunta ${i+1} · ${q.topic}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="options-grid">`;
+    const letters = ['A','B','C','D'];
+    q.options.forEach((opt, j) => {
+      let cls = '';
+      if (isAnswered) {
+        if (j === q.correct) cls = 'correct-opt';
+        else if (j === state.chosen) cls = 'wrong-opt';
+      }
+      html += `<button class="option-btn ${cls}" onclick="answer(${i}, ${j})" ${isAnswered ? 'disabled' : ''}>
+        <span class="opt-letter">${letters[j]}</span>${opt}
+      </button>`;
+    });
+    html += `</div>`;
+    if (isAnswered) {
+      const fbCls = state.correct ? 'correct-fb' : 'wrong-fb';
+      const icon = state.correct ? '✅' : '❌';
+      html += `<div class="q-feedback show ${fbCls}">${icon} ${q.feedback}</div>`;
+    }
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+  updateScoreDisplay();
+}
+
+function answer(qi, chosen) {
+  const q = questions[qi];
+  const correct = chosen === q.correct;
+  answered[qi] = { chosen, correct };
+  buildQuiz();
+  // Check if all answered
+  if (Object.keys(answered).length === questions.length) {
+    showResult();
+  }
+}
+
+function updateScoreDisplay() {
+  const total = Object.keys(answered).length;
+  const score = Object.values(answered).filter(a => a.correct).length;
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('total-display').textContent = total;
+}
+
+function showResult() {
+  const score = Object.values(answered).filter(a => a.correct).length;
+  const total = questions.length;
+  const pct = score / total;
+  // Escala chilena 1.0-7.0 (exigencia 60%)
+  let nota;
+  if (pct >= 0.60) nota = 4.0 + (pct - 0.60) / 0.40 * 3.0;
+  else nota = 1.0 + (pct / 0.60) * 3.0;
+  nota = Math.round(nota * 10) / 10;
+  nota = Math.min(7.0, Math.max(1.0, nota));
+
+  let emoji, title;
+  if (nota >= 6.5) { emoji = '🌟'; title = '¡Excelente dominio!'; }
+  else if (nota >= 5.5) { emoji = '🎉'; title = '¡Muy bien!'; }
+  else if (nota >= 4.0) { emoji = '👍'; title = 'Aprobado'; }
+  else { emoji = '📚'; title = 'Necesitas repasar'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-score-val').textContent = score + ' / ' + total;
+  document.getElementById('result-nota').innerHTML = `Nota: <strong>${nota.toFixed(1)}</strong>`;
+  document.getElementById('result-panel').classList.add('show');
+
+  // Save to scores table
+  scores[currentStudent] = { score, total, nota };
+  renderScoresTable();
+}
+
+function renderScoresTable() {
+  const tbody = document.getElementById('scores-tbody');
+  if (Object.keys(scores).length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted); text-align:center; padding:20px">Sin puntajes aún</td></tr>';
+    return;
+  }
+  let html = '';
+  Object.entries(scores).forEach(([name, s]) => {
+    const pct = Math.round(s.score / s.total * 100);
+    let badgeCls = s.nota >= 5.5 ? 'high' : s.nota >= 4.0 ? 'mid' : 'low';
+    let estado = s.nota >= 4.0 ? '✅ Aprobado' : '❌ Reprobado';
+    html += `<tr>
+      <td><strong>${name}</strong></td>
+      <td style="font-family:'DM Mono',monospace">${s.score} / ${s.total}</td>
+      <td style="font-family:'DM Mono',monospace">${pct}%</td>
+      <td><span class="nota-badge ${badgeCls}">${s.nota.toFixed(1)}</span></td>
+      <td style="color:var(--muted); font-size:0.82rem">${estado}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+function resetQuiz() {
+  answered = {};
+  buildQuiz();
+  document.getElementById('result-panel').classList.remove('show');
+}
+
+// Init
+buildQuiz();
+updateProgress();
+</script>
+</body>
+</html>
