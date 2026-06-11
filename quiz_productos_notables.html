@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz · Productos Notables · 1° Medio</title>
+<style>
+  :root {
+    --bg: #F4F6FB;
+    --surface: #FFFFFF;
+    --surface2: #E8EDF7;
+    --purple: #CC1E2B;
+    --purple-light: #E8424E;
+    --purple-dark: #8C1118;
+    --teal: #1A3A8F;
+    --amber: #1A3A8F;
+    --coral: #0D2266;
+    --green: #1A7A3C;
+    --red: #CC1E2B;
+    --text: #0D1A2E;
+    --text2: #3A3A3A;
+    --text3: #888888;
+    --border: rgba(204,30,43,0.15);
+    --radius: 14px;
+    --shadow: 0 2px 16px rgba(26,58,143,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--purple);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 18px 24px 16px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .shield-wrap { flex-shrink: 0; }
+  .header-text { flex: 1; }
+  .school-tag {
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 4px;
+  }
+  header h1 {
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+  header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  .music-btn {
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background .2s;
+  }
+  .music-btn:hover { background: rgba(255,255,255,0.28); }
+  .header-deco {
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header-deco2 {
+    position: absolute;
+    right: 60px; bottom: -50px;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* TABS */
+  .tabs {
+    background: #0D2266;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .tab-list {
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 11px 18px 10px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .18s;
+    white-space: nowrap;
+  }
+  .tab-btn.active {
+    color: white;
+    border-bottom-color: #CC1E2B;
+  }
+  .tab-btn:hover { color: white; }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* SCOREBOARD */
+  .scoreboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .score-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .score-card .num {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .score-card .lbl {
+    font-size: 11px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .score-card.c-purple .num { color: #CC1E2B; }
+  .score-card.c-green .num  { color: var(--green); }
+  .score-card.c-red .num    { color: #CC1E2B; }
+  .score-card.c-amber .num  { color: #1A3A8F; }
+
+  /* NOTA BAR */
+  .nota-bar {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nota-label { font-size: 13px; color: var(--text2); min-width: 120px; }
+  .nota-track {
+    flex: 1;
+    height: 10px;
+    background: #D0D8F0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .nota-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: #CC1E2B;
+    transition: width .4s ease, background .4s;
+    width: 0%;
+  }
+  .nota-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #CC1E2B;
+    min-width: 44px;
+    text-align: right;
+    transition: color .4s;
+  }
+
+  /* SECTION PANEL */
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .section-badge {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .badge-I   { background: #CC1E2B; }
+  .badge-II  { background: #1A3A8F; }
+  .badge-III { background: #CC1E2B; }
+  .badge-IV  { background: #1A3A8F; }
+  .section-title { font-size: 16px; font-weight: 600; }
+  .section-desc  { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: #EDF0FA;
+    border: 1px dashed #1A3A8F;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #0D2266;
+    margin-bottom: 18px;
+    line-height: 1.8;
+  }
+  .formula-box strong { font-weight: 600; color: #CC1E2B; }
+
+  /* QUESTION CARDS */
+  .q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .q-grid { grid-template-columns: 1fr; } }
+
+  .q-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    transition: border-color .2s;
+  }
+  .q-card.answered-ok  { border-color: var(--green); }
+  .q-card.answered-err { border-color: var(--red); }
+
+  .q-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+  }
+  .q-expr {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: .01em;
+  }
+
+  .opts { display: flex; flex-direction: column; gap: 7px; }
+  .opt-btn {
+    background: var(--bg);
+    border: 1.5px solid transparent;
+    border-radius: 9px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    transition: all .15s;
+    line-height: 1.4;
+  }
+  .opt-btn:hover:not(:disabled) {
+    background: #E8EDF7;
+    border-color: #1A3A8F;
+  }
+  .opt-btn.correct {
+    background: #D4F6ED;
+    border-color: var(--green);
+    color: #005A3E;
+    font-weight: 500;
+  }
+  .opt-btn.wrong {
+    background: #FFE8E8;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .opt-btn:disabled { cursor: default; }
+
+  .q-feedback {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 7px;
+    padding: 7px 10px;
+    display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.ok  { background: #D4F6ED; color: #005A3E; }
+  .q-feedback.err { background: #FFE8E8; color: #8B0000; }
+
+  /* NAVIGATION */
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .nav-btn {
+    padding: 10px 22px;
+    border-radius: 9px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .nav-btn:hover { opacity: .85; }
+  .nav-btn.primary { background: #CC1E2B; color: white; }
+  .nav-btn.secondary { background: white; color: #CC1E2B; border: 1.5px solid #CC1E2B; }
+
+  /* RESULTS PANEL */
+  #results-panel {
+    text-align: center;
+    padding: 32px 0 16px;
+  }
+  .trophy { font-size: 64px; margin-bottom: 12px; }
+  .final-nota {
+    font-size: 64px;
+    font-weight: 800;
+    color: #CC1E2B;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .final-msg {
+    font-size: 18px;
+    color: var(--text2);
+    margin-bottom: 24px;
+  }
+  .breakdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 0 auto 28px;
+    max-width: 560px;
+  }
+  .bk-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 8px;
+    box-shadow: var(--shadow);
+  }
+  .bk-card .bk-num { font-size: 22px; font-weight: 700; }
+  .bk-card .bk-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .bk-I   .bk-num { color: #CC1E2B; }
+  .bk-II  .bk-num { color: #1A3A8F; }
+  .bk-III .bk-num { color: #CC1E2B; }
+  .bk-IV  .bk-num { color: #1A3A8F; }
+
+  .retry-btn {
+    padding: 12px 32px;
+    border-radius: 10px;
+    background: #CC1E2B;
+    color: white;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .retry-btn:hover { opacity: .88; }
+
+  /* Progress dots */
+  .progress-dots {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #C8D0E8;
+    transition: background .25s;
+  }
+  .dot.ok  { background: var(--green); }
+  .dot.err { background: #CC1E2B; }
+  .dot.current { background: #1A3A8F; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-deco"></div>
+  <div class="header-deco2"></div>
+  <div class="header-inner">
+    <div class="shield-wrap">
+      <svg width="68" height="76" viewBox="0 0 68 76" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shield: rounded triangle, wide at bottom, pointed arch at top -->
+        <path d="M34 3 C34 3 8 3 5 18 L5 46 C5 62 34 74 34 74 C34 74 63 62 63 46 L63 18 C60 3 34 3 34 3 Z" fill="#CC1E2B"/>
+        <path d="M34 3 C34 3 8 3 5 18 L5 46 C5 62 34 74 34 74 C34 74 63 62 63 46 L63 18 C60 3 34 3 34 3 Z" fill="none" stroke="white" stroke-width="2"/>
+        <!-- Blue cross centered top half -->
+        <rect x="31" y="9" width="6" height="26" rx="1.5" fill="#1A3A8F"/>
+        <rect x="21" y="18" width="26" height="6" rx="1.5" fill="#1A3A8F"/>
+        <!-- White outline on cross -->
+        <rect x="31" y="9" width="6" height="26" rx="1.5" fill="none" stroke="white" stroke-width="0.8"/>
+        <rect x="21" y="18" width="26" height="6" rx="1.5" fill="none" stroke="white" stroke-width="0.8"/>
+        <!-- P letter - left side bottom -->
+        <text x="9" y="62" font-family="Arial Black,Impact,sans-serif" font-size="26" font-weight="900" fill="white">P</text>
+        <!-- H letter - right side bottom -->
+        <text x="36" y="62" font-family="Arial Black,Impact,sans-serif" font-size="26" font-weight="900" fill="white">H</text>
+      </svg>
+    </div>
+    <div class="header-text">
+      <div class="school-tag">Colegio Seminario Padre Alberto Hurtado · 1° Medio</div>
+      <h1>Quiz — Productos Notables</h1>
+      <p>Responde cada ejercicio y recibe tu nota al final. ¡Suerte!</p>
+    </div>
+    <button class="music-btn" id="music-btn" onclick="toggleMusic()" title="Música de fondo">🎵</button>
+  </div>
+  <div class="tabs">
+    <div class="tab-list">
+      <button class="tab-btn active" onclick="goTab(0)">I. Cuadrado binomio</button>
+      <button class="tab-btn" onclick="goTab(1)">II. Suma × diferencia</button>
+      <button class="tab-btn" onclick="goTab(2)">III. Término común</button>
+      <button class="tab-btn" onclick="goTab(3)">IV. Identificación</button>
+      <button class="tab-btn" onclick="goTab(4)">Resultados</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- SCOREBOARD -->
+  <div class="scoreboard">
+    <div class="score-card c-purple">
+      <div class="num" id="sc-total">0</div>
+      <div class="lbl">Respondidas</div>
+    </div>
+    <div class="score-card c-green">
+      <div class="num" id="sc-ok">0</div>
+      <div class="lbl">Correctas</div>
+    </div>
+    <div class="score-card c-red">
+      <div class="num" id="sc-err">0</div>
+      <div class="lbl">Incorrectas</div>
+    </div>
+    <div class="score-card c-amber">
+      <div class="num" id="sc-pend">32</div>
+      <div class="lbl">Pendientes</div>
+    </div>
+  </div>
+
+  <!-- NOTA BAR -->
+  <div class="nota-bar">
+    <span class="nota-label">Nota estimada</span>
+    <div class="nota-track"><div class="nota-fill" id="nota-fill"></div></div>
+    <span class="nota-value" id="nota-val">—</span>
+  </div>
+
+  <!-- SECTION I -->
+  <div class="section-panel active" id="panel-0">
+    <div class="section-header">
+      <div class="section-badge badge-I">I</div>
+      <div>
+        <div class="section-title">Cuadrado de binomio</div>
+        <div class="section-desc">Desarrolla usando (a±b)² = a² ± 2ab + b²</div>
+      </div>
+    </div>
+    <div class="formula-box">
+      <strong>(a + b)²</strong> = a² + 2ab + b² &nbsp;&nbsp;|&nbsp;&nbsp; <strong>(a − b)²</strong> = a² − 2ab + b²
+    </div>
+    <div class="progress-dots" id="dots-0"></div>
+    <div class="q-grid" id="grid-0"></div>
+    <div class="nav-row">
+      <button class="nav-btn primary" onclick="goTab(1)">Siguiente sección →</button>
+    </div>
+  </div>
+
+  <!-- SECTION II -->
+  <div class="section-panel" id="panel-1">
+    <div class="section-header">
+      <div class="section-badge badge-II">II</div>
+      <div>
+        <div class="section-title">Suma por su diferencia</div>
+        <div class="section-desc">Desarrolla usando (a + b)(a − b) = a² − b²</div>
+      </div>
+    </div>
+    <div class="formula-box">
+      <strong>(a + b)(a − b)</strong> = a² − b²
+    </div>
+    <div class="progress-dots" id="dots-1"></div>
+    <div class="q-grid" id="grid-1"></div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" onclick="goTab(0)">← Anterior</button>
+      <button class="nav-btn primary" onclick="goTab(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECTION III -->
+  <div class="section-panel" id="panel-2">
+    <div class="section-header">
+      <div class="section-badge badge-III">III</div>
+      <div>
+        <div class="section-title">Binomios con término en común</div>
+        <div class="section-desc">Desarrolla usando (x+a)(x+b) = x² + (a+b)x + ab</div>
+      </div>
+    </div>
+    <div class="formula-box">
+      <strong>(x + a)(x + b)</strong> = x² + (a+b)x + ab
+    </div>
+    <div class="progress-dots" id="dots-2"></div>
+    <div class="q-grid" id="grid-2"></div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" onclick="goTab(1)">← Anterior</button>
+      <button class="nav-btn primary" onclick="goTab(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECTION IV -->
+  <div class="section-panel" id="panel-3">
+    <div class="section-header">
+      <div class="section-badge badge-IV">IV</div>
+      <div>
+        <div class="section-title">Identificación y desarrollo</div>
+        <div class="section-desc">Identifica el tipo de producto notable y su resultado correcto</div>
+      </div>
+    </div>
+    <div class="progress-dots" id="dots-3"></div>
+    <div class="q-grid" id="grid-3"></div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" onclick="goTab(2)">← Anterior</button>
+      <button class="nav-btn primary" onclick="showResults()">Ver resultados →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section-panel" id="panel-4">
+    <div id="results-panel">
+      <div class="trophy" id="trophy">🏆</div>
+      <div class="final-nota" id="final-nota">—</div>
+      <div class="final-msg" id="final-msg">Completa el quiz para ver tu nota</div>
+      <div class="breakdown">
+        <div class="bk-card bk-I"><div class="bk-num" id="bk-I">—</div><div class="bk-lbl">Secc. I</div></div>
+        <div class="bk-card bk-II"><div class="bk-num" id="bk-II">—</div><div class="bk-lbl">Secc. II</div></div>
+        <div class="bk-card bk-III"><div class="bk-num" id="bk-III">—</div><div class="bk-lbl">Secc. III</div></div>
+        <div class="bk-card bk-IV"><div class="bk-num" id="bk-IV">—</div><div class="bk-lbl">Secc. IV</div></div>
+      </div>
+      <button class="retry-btn" onclick="resetQuiz()">Intentar de nuevo</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ===================== DATA =====================
+// opts order: correct answer position rotates A/B/C/D across questions
+// Sec I:  A B C D A B C D
+// Sec II: B C D A C D A B
+// Sec III:D A B C B D C A
+// Sec IV: C B D A D C A B
+const sections = [
+  {
+    id: 0,
+    questions: [
+      { expr: "(9x + y)²",  correct: "81x² + 18xy + y²",  opts: ["81x² + 18xy + y²","81x² + 9xy + y²","81x² − 18xy + y²","9x² + 18xy + y²"], hint: "a=9x, b=y → a²=81x², 2ab=18xy, b²=y²" },
+      { expr: "(5a − 2)²",  correct: "25a² − 20a + 4",    opts: ["25a² + 20a + 4","25a² − 20a + 4","25a² − 10a + 4","5a² − 20a + 4"], hint: "a=5a, b=2 → (5a)²=25a², 2·5a·2=20a, 2²=4. Resta porque es (a−b)²" },
+      { expr: "(m − 7)²",   correct: "m² − 14m + 49",     opts: ["m² + 14m + 49","m² − 7m + 49","m² − 14m + 49","m² − 14m − 49"], hint: "a=m, b=7 → m², −2·m·7=−14m, 49" },
+      { expr: "(2v + 2)²",  correct: "4v² + 8v + 4",      opts: ["4v² + 4v + 4","4v² + 8v + 2","2v² + 8v + 4","4v² + 8v + 4"], hint: "a=2v, b=2 → 4v², 2·2v·2=8v, 4" },
+      { expr: "(5p + 3q)²", correct: "25p² + 30pq + 9q²", opts: ["25p² + 30pq + 9q²","25p² + 15pq + 9q²","25p² + 30pq + 3q²","5p² + 30pq + 9q²"], hint: "a=5p, b=3q → 25p², 2·5p·3q=30pq, 9q²" },
+      { expr: "(4x + 12)²", correct: "16x² + 96x + 144",  opts: ["16x² + 48x + 144","16x² + 96x + 144","16x² + 96x + 12","4x² + 96x + 144"], hint: "a=4x, b=12 → 16x², 2·4x·12=96x, 144" },
+      { expr: "(7m − n)²",  correct: "49m² − 14mn + n²",  opts: ["49m² + 14mn + n²","49m² − 7mn + n²","49m² − 14mn + n²","7m² − 14mn + n²"], hint: "a=7m, b=n → 49m², −2·7m·n=−14mn, n²" },
+      { expr: "(a + 3b)²",  correct: "a² + 6ab + 9b²",    opts: ["a² + 3ab + 9b²","a² + 6ab + 3b²","a² − 6ab + 9b²","a² + 6ab + 9b²"], hint: "a=a, b=3b → a², 2·a·3b=6ab, 9b²" }
+    ]
+  },
+  {
+    id: 1,
+    questions: [
+      { expr: "(x + 7)(x − 7)",    correct: "x² − 49",    opts: ["x² + 49","x² − 49","x² − 7","x² − 14x − 49"], hint: "a=x, b=7 → x² − 7² = x² − 49" },
+      { expr: "(3 + r)(3 − r)",     correct: "9 − r²",     opts: ["9 + r²","r² − 9","9 − r²","9 − 2r"], hint: "a=3, b=r → 3² − r² = 9 − r²" },
+      { expr: "(3p + 4)(3p − 4)",   correct: "9p² − 16",   opts: ["9p² + 16","3p² − 16","9p² − 8","9p² − 16"], hint: "a=3p, b=4 → 9p² − 16" },
+      { expr: "(2 + 3s)(2 − 3s)",   correct: "4 − 9s²",    opts: ["4 − 9s²","4 + 9s²","4 − 3s²","9s² − 4"], hint: "a=2, b=3s → 4 − 9s²" },
+      { expr: "(2w − 5x)(2w + 5x)", correct: "4w² − 25x²", opts: ["4w² + 25x²","2w² − 25x²","4w² − 25x²","4w² − 5x²"], hint: "a=2w, b=5x → 4w² − 25x²" },
+      { expr: "(6m + 2n)(6m − 2n)", correct: "36m² − 4n²", opts: ["36m² + 4n²","6m² − 4n²","36m² − 2n²","36m² − 4n²"], hint: "a=6m, b=2n → 36m² − 4n²" },
+      { expr: "(ab + c)(ab − c)",   correct: "a²b² − c²",  opts: ["a²b² − c²","ab² − c²","a²b² + c²","a²b − c²"], hint: "a=ab, b=c → (ab)² − c² = a²b² − c²" },
+      { expr: "(9q + 3r)(9q − 3r)", correct: "81q² − 9r²", opts: ["81q² + 9r²","81q² − 9r²","9q² − 9r²","81q² − 3r²"], hint: "a=9q, b=3r → 81q² − 9r²" }
+    ]
+  },
+  {
+    id: 2,
+    questions: [
+      { expr: "(x + 3)(x − 4)",    correct: "x² − x − 12",      opts: ["x² + x − 12","x² − x + 12","x² − 7x − 12","x² − x − 12"], hint: "a+b = 3+(−4) = −1 → coef. x es −1. ab = 3·(−4) = −12" },
+      { expr: "(m + 12)(m + 3)",   correct: "m² + 15m + 36",     opts: ["m² + 15m + 36","m² + 36m + 36","m² + 15m + 12","m² + 9m + 36"], hint: "a+b = 12+3 = 15, ab = 36" },
+      { expr: "(p − 4)(p − 5)",    correct: "p² − 9p + 20",      opts: ["p² + 9p + 20","p² − 9p + 20","p² − 9p − 20","p² − 20p + 20"], hint: "a+b = −4+(−5) = −9, ab = (−4)(−5) = +20" },
+      { expr: "(a − 2)(a + 3)",    correct: "a² + a − 6",        opts: ["a² − a − 6","a² + a + 6","a² − 5a − 6","a² + a − 6"], hint: "a+b = −2+3 = +1, ab = −2·3 = −6" },
+      { expr: "(w + 5y)(w + 3y)",  correct: "w² + 8wy + 15y²",   opts: ["w² + 8wy + 15y²","w² + 15wy + 8y²","w² + 8wy + 5y²","w² + 2wy + 15y²"], hint: "a+b = 5+3 = 8, ab = 15 → coeficientes de y" },
+      { expr: "(r + 3s)(r − 8s)",  correct: "r² − 5rs − 24s²",   opts: ["r² + 5rs − 24s²","r² − 5rs − 24s²","r² − 5rs + 24s²","r² − 11rs − 24s²"], hint: "a+b = 3+(−8) = −5, ab = 3·(−8) = −24" },
+      { expr: "(p + 2q)(p − q)",   correct: "p² + pq − 2q²",     opts: ["p² − pq − 2q²","p² + pq + 2q²","p² + pq − 2q²","p² + 3pq − 2q²"], hint: "a+b = 2+(−1) = 1, ab = 2·(−1) = −2" },
+      { expr: "(a + 20b)(a − 8b)", correct: "a² + 12ab − 160b²", opts: ["a² + 12ab − 160b²","a² − 12ab − 160b²","a² + 28ab − 160b²","a² + 12ab + 160b²"], hint: "a+b = 20+(−8) = 12, ab = 20·(−8) = −160" }
+    ]
+  },
+  {
+    id: 3,
+    questions: [
+      { expr: "(x + 3)(x + 3)",     correct: "Cuad. binomio → x² + 6x + 9",       opts: ["Suma×dif. → x² − 9","Binom. común → x² + 3x + 9","Cuad. binomio → x² + 6x + 9","Cuad. binomio → x² + 3x + 9"], hint: "Factores idénticos = cuadrado. (x+3)² = x²+6x+9" },
+      { expr: "(x + 3)(x − 3)",     correct: "Suma×dif. → x² − 9",                opts: ["Cuad. binomio → x² − 9","Suma×dif. → x² − 9","Binom. común → x² + 9","Binom. común → x² − 9"], hint: "Mismo término, signos opuestos = suma×diferencia. x²−9" },
+      { expr: "(m + 4)(m − 3)",     correct: "Binom. común → m² + m − 12",        opts: ["Suma×dif. → m² − 12","Cuad. binomio → m² + m + 12","Binom. común → m² − m − 12","Binom. común → m² + m − 12"], hint: "a+b = 4+(−3) = 1, ab = −12" },
+      { expr: "(a − 6)(a + 6)",     correct: "Suma×dif. → a² − 36",               opts: ["Suma×dif. → a² − 36","Cuad. binomio → a² + 36","Binom. común → a² − 36","Suma×dif. → a² + 36"], hint: "Mismo término, signos opuestos → a² − 36" },
+      { expr: "(p + 3q)(p + q)",    correct: "Binom. común → p² + 4pq + 3q²",     opts: ["Cuad. binomio → p² + 4pq + q²","Suma×dif. → p² − 3q²","Binom. común → p² + 3pq + 3q²","Binom. común → p² + 4pq + 3q²"], hint: "a+b = 3+1 = 4, ab = 3 → p² + 4pq + 3q²" },
+      { expr: "(w + 5)(w − 5)",     correct: "Suma×dif. → w² − 25",               opts: ["Cuad. binomio → w² − 25","Binom. común → w² − 25","Suma×dif. → w² + 25","Suma×dif. → w² − 25"], hint: "Mismo término, signos opuestos → w²−25" },
+      { expr: "(2p + 3q)(2p + 3q)", correct: "Cuad. binomio → 4p² + 12pq + 9q²", opts: ["Cuad. binomio → 4p² + 12pq + 9q²","Suma×dif. → 4p² − 9q²","Binom. común → 4p² + 6pq + 9q²","Cuad. binomio → 4p² + 6pq + 9q²"], hint: "Factores idénticos → (2p+3q)². 4p²+12pq+9q²" },
+      { expr: "(2x + 4y)(2x − 4y)", correct: "Suma×dif. → 4x² − 16y²",           opts: ["Cuad. binomio → 4x² + 16y²","Suma×dif. → 4x² − 16y²","Binom. común → 4x² − 16y²","Suma×dif. → 4x² − 8y²"], hint: "Mismo término, signos opuestos → (2x)²−(4y)² = 4x²−16y²" }
+    ]
+  }
+];
+
+// ===================== STATE =====================
+const state = { answers: {}, total: 0, ok: 0, err: 0 };
+const TOTAL = 32;
+
+// ===================== BUILD =====================
+function buildAll() {
+  sections.forEach(sec => {
+    const grid = document.getElementById('grid-' + sec.id);
+    const dots = document.getElementById('dots-' + sec.id);
+    grid.innerHTML = '';
+    dots.innerHTML = '';
+    sec.questions.forEach((q, qi) => {
+      const key = sec.id + '-' + qi;
+      // dot
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.id = 'dot-' + key;
+      dots.appendChild(dot);
+      // card
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = 'card-' + key;
+      const letters = ['A','B','C','D'];
+      card.innerHTML = `
+        <div class="q-label">Pregunta ${qi+1}</div>
+        <div class="q-expr">${q.expr}</div>
+        <div class="opts" id="opts-${key}">
+          ${q.opts.map((o,i) => `<button class="opt-btn" onclick="answer('${key}','${escOpt(o)}')" id="opt-${key}-${i}">${letters[i]}. ${o}</button>`).join('')}
+        </div>
+        <div class="q-feedback" id="fb-${key}"></div>
+      `;
+      grid.appendChild(card);
+    });
+  });
+}
+
+function escOpt(s) { return s.replace(/'/g,"&#39;"); }
+
+// ===================== ANSWER =====================
+// Track wrong attempts per question key
+const wrongAttempts = {};
+
+function answer(key, chosen) {
+  const [si, qi] = key.split('-').map(Number);
+  const q = sections[si].questions[qi];
+  // If already answered correctly, ignore
+  if (state.answers[key] === true) return;
+
+  const correct = q.correct;
+  const isOk = chosen === correct;
+
+  if (AC.state === 'suspended') AC.resume();
+
+  if (isOk) {
+    // Mark as correct, lock all buttons
+    state.answers[key] = true;
+    // Only count as correct if no wrong attempts, else still count ok
+    if (!wrongAttempts[key]) {
+      state.ok++;
+    } else {
+      state.ok++;
+    }
+    state.total++;
+    playTrumpet();
+
+    const optsEl = document.getElementById('opts-' + key);
+    optsEl.querySelectorAll('.opt-btn').forEach(btn => {
+      btn.disabled = true;
+      const txt = btn.textContent.substring(3);
+      if (txt === correct) btn.classList.add('correct');
+    });
+
+    const card = document.getElementById('card-' + key);
+    card.classList.remove('answered-err');
+    card.classList.add('answered-ok');
+
+    const dot = document.getElementById('dot-' + key);
+    dot.className = 'dot ok';
+
+    const fb = document.getElementById('fb-' + key);
+    const tries = wrongAttempts[key] || 0;
+    fb.className = 'q-feedback show ok';
+    fb.innerHTML = tries > 0
+      ? `✓ ¡Correcto! (en ${tries+1} intentos)`
+      : '✓ ¡Correcto!';
+
+  } else {
+    // Wrong attempt — mark chosen red temporarily, let retry
+    if (!wrongAttempts[key]) {
+      wrongAttempts[key] = 0;
+      state.err++;
+      state.total++;
+    }
+    wrongAttempts[key]++;
+    playQuack();
+
+    // Find and flash the wrong button
+    const optsEl = document.getElementById('opts-' + key);
+    optsEl.querySelectorAll('.opt-btn').forEach(btn => {
+      const txt = btn.textContent.substring(3);
+      if (txt === chosen) {
+        btn.disabled = true;
+        btn.classList.add('wrong');
+      }
+    });
+
+    const card = document.getElementById('card-' + key);
+    card.classList.add('answered-err');
+
+    const dot = document.getElementById('dot-' + key);
+    dot.className = 'dot err';
+
+    const fb = document.getElementById('fb-' + key);
+    fb.className = 'q-feedback show err';
+    fb.innerHTML = `✗ Esa no es. ¡Sigue intentando! (intento ${wrongAttempts[key]})`;
+  }
+
+  updateScoreboard();
+}
+
+// ===================== SCOREBOARD =====================
+function updateScoreboard() {
+  const pend = TOTAL - state.total;
+  document.getElementById('sc-total').textContent = state.total;
+  document.getElementById('sc-ok').textContent    = state.ok;
+  document.getElementById('sc-err').textContent   = state.err;
+  document.getElementById('sc-pend').textContent  = pend;
+
+  // nota chilena (1.0–7.0, aprobación 60%)
+  const pct = state.total > 0 ? state.ok / state.total : 0;
+  const nota = state.total > 0 ? calcNota(state.ok, state.total) : null;
+
+  const fill = document.getElementById('nota-fill');
+  const val  = document.getElementById('nota-val');
+  if (nota !== null) {
+    const fillPct = Math.max(0, Math.min(100, ((nota - 1) / 6) * 100));
+    fill.style.width = fillPct + '%';
+    fill.style.background = nota >= 4.0 ? 'var(--green)' : '#CC1E2B';
+    val.style.color = nota >= 4.0 ? 'var(--green)' : '#CC1E2B';
+    val.textContent = nota.toFixed(1);
+  }
+}
+
+function calcNota(ok, total) {
+  const pct = ok / total;
+  if (pct < 0.6) {
+    return 1.0 + (pct / 0.6) * 3.0;
+  } else {
+    return 4.0 + ((pct - 0.6) / 0.4) * 3.0;
+  }
+}
+
+// ===================== TABS =====================
+function goTab(i) {
+  document.querySelectorAll('.section-panel').forEach((p,j) => p.classList.toggle('active', j===i));
+  document.querySelectorAll('.tab-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ===================== RESULTS =====================
+function showResults() {
+  goTab(4);
+  const nota = state.total > 0 ? calcNota(state.ok, state.total) : 1.0;
+  document.getElementById('final-nota').textContent = nota.toFixed(1);
+
+  const msgs = [
+    [6.5, "¡Excelente! Dominas todos los productos notables 🌟"],
+    [5.5, "¡Muy bien! Tienes muy buen manejo del tema 👍"],
+    [4.0, "Aprobado. Repasa los ítems incorrectos para consolidar 📖"],
+    [0,   "Necesitas repasar más. ¡Inténtalo de nuevo! 💪"]
+  ];
+  const msg = msgs.find(([min]) => nota >= min);
+  document.getElementById('final-msg').textContent = msg[1];
+
+  const trophies = nota >= 6.5 ? "🏆" : nota >= 5.0 ? "🥈" : nota >= 4.0 ? "🥉" : "📚";
+  document.getElementById('trophy').textContent = trophies;
+  document.getElementById('final-nota').style.color = nota >= 4.0 ? 'var(--green)' : '#CC1E2B';
+
+  // breakdown por sección
+  sections.forEach(sec => {
+    let okS = 0, total = sec.questions.length;
+    sec.questions.forEach((q,qi) => {
+      const k = sec.id + '-' + qi;
+      if (state.answers[k] === true) okS++;
+    });
+    document.getElementById('bk-' + ['I','II','III','IV'][sec.id]).textContent =
+      state.answers[sec.id+'-0'] !== undefined
+        ? okS + '/' + total
+        : '—';
+  });
+}
+
+// ===================== RESET =====================
+function resetQuiz() {
+  state.answers = {};
+  state.total = 0; state.ok = 0; state.err = 0;
+  document.getElementById('nota-fill').style.width = '0%';
+  document.getElementById('nota-val').textContent = '—';
+  buildAll();
+  updateScoreboard();
+  goTab(0);
+}
+
+// ===================== INIT =====================
+buildAll();
+
+// ===================== AUDIO ENGINE =====================
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+
+function playTrumpet() {
+  // Fanfare: 3 quick ascending notes
+  const notes = [523.25, 659.25, 783.99, 1046.5];
+  const times = [0, 0.10, 0.20, 0.32];
+  notes.forEach((freq, i) => {
+    const osc = AC.createOscillator();
+    const gain = AC.createGain();
+    const dist = AC.createWaveShaper();
+    // Slight distortion for brass feel
+    const curve = new Float32Array(256);
+    for (let j=0;j<256;j++){const x=j*2/256-1; curve[j]=x*(Math.abs(x)+0.3)/(x*x+0.3*Math.abs(x)+1);}
+    dist.curve = curve;
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(freq, AC.currentTime + times[i]);
+    gain.gain.setValueAtTime(0, AC.currentTime + times[i]);
+    gain.gain.linearRampToValueAtTime(0.22, AC.currentTime + times[i] + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + times[i] + 0.18);
+    osc.connect(dist); dist.connect(gain); gain.connect(AC.destination);
+    osc.start(AC.currentTime + times[i]);
+    osc.stop(AC.currentTime + times[i] + 0.25);
+  });
+}
+
+function playQuack() {
+  // Duck quack: descending FM sweep
+  const osc = AC.createOscillator();
+  const mod = AC.createOscillator();
+  const modGain = AC.createGain();
+  const gain = AC.createGain();
+  osc.type = 'sawtooth';
+  mod.type = 'sine';
+  osc.frequency.setValueAtTime(520, AC.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(180, AC.currentTime + 0.22);
+  mod.frequency.setValueAtTime(28, AC.currentTime);
+  modGain.gain.setValueAtTime(120, AC.currentTime);
+  gain.gain.setValueAtTime(0.28, AC.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.28);
+  mod.connect(modGain); modGain.connect(osc.frequency);
+  osc.connect(gain); gain.connect(AC.destination);
+  osc.start(AC.currentTime); osc.stop(AC.currentTime + 0.3);
+  mod.start(AC.currentTime); mod.stop(AC.currentTime + 0.3);
+  // Second shorter quack
+  setTimeout(() => {
+    const o2 = AC.createOscillator();
+    const g2 = AC.createGain();
+    o2.type = 'sawtooth';
+    o2.frequency.setValueAtTime(460, AC.currentTime);
+    o2.frequency.exponentialRampToValueAtTime(160, AC.currentTime + 0.15);
+    g2.gain.setValueAtTime(0.18, AC.currentTime);
+    g2.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.18);
+    o2.connect(g2); g2.connect(AC.destination);
+    o2.start(AC.currentTime); o2.stop(AC.currentTime + 0.2);
+  }, 280);
+}
+
+// ===================== 8-BIT REGGAETON =====================
+let musicPlaying = false;
+let musicStarted = false;
+let loopTimeout = null;
+const BPM = 96;
+const B = 60 / BPM;  // one beat in seconds
+
+// Master gain for music (lower so sounds effects come through)
+const musicGain = AC.createGain();
+musicGain.gain.value = 0.55;
+musicGain.connect(AC.destination);
+
+function n8(freq, t, dur, vol, type) {
+  if (freq <= 0) return;
+  const o = AC.createOscillator();
+  const g = AC.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(vol || 0.08, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(musicGain);
+  o.start(t); o.stop(t + dur + 0.01);
+}
+
+function kick8(t) {
+  const o = AC.createOscillator();
+  const g = AC.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(180, t);
+  o.frequency.exponentialRampToValueAtTime(35, t + 0.12);
+  g.gain.setValueAtTime(0.9, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+  o.connect(g); g.connect(musicGain);
+  o.start(t); o.stop(t + 0.2);
+}
+
+function snare8(t) {
+  const sr = AC.sampleRate;
+  const buf = AC.createBuffer(1, sr * 0.14, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length) * (1 - i / d.length);
+  const src = AC.createBufferSource();
+  const g = AC.createGain();
+  const f = AC.createBiquadFilter();
+  src.buffer = buf;
+  f.type = 'highpass'; f.frequency.value = 2200;
+  g.gain.setValueAtTime(0.55, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+  src.connect(f); f.connect(g); g.connect(musicGain);
+  src.start(t); src.stop(t + 0.15);
+}
+
+function hihat8(t, vol) {
+  const sr = AC.sampleRate;
+  const buf = AC.createBuffer(1, sr * 0.03, sr);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+  const src = AC.createBufferSource();
+  const g = AC.createGain();
+  const f = AC.createBiquadFilter();
+  src.buffer = buf;
+  f.type = 'highpass'; f.frequency.value = 7000;
+  g.gain.setValueAtTime(vol || 0.18, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
+  src.connect(f); f.connect(g); g.connect(musicGain);
+  src.start(t); src.stop(t + 0.035);
+}
+
+// Reggaeton dembow = kick on every beat + extra kick on the "and" of 2 (offbeat 8th)
+// Pattern per bar (4 beats): K . K . K . K k S . S . | with hihat 8ths
+// Melody: catchy 8-bit hook in A minor
+const MELODY = [
+  [440,0,0.18],[440,0.25,0.12],[523,0.5,0.22],[392,0.75,0.12],
+  [440,1,0.18],[392,1.25,0.12],[349,1.5,0.35],[0,0,0],
+  [392,2,0.18],[392,2.25,0.12],[440,2.5,0.22],[523,2.75,0.12],
+  [494,3,0.18],[440,3.25,0.12],[392,3.5,0.35],[0,0,0],
+];
+// Bass: low square wave
+const BASS = [
+  [110,0,0.42],[110,0.5,0.22],[98,1,0.42],[110,1.5,0.22],
+  [110,2,0.42],[110,2.5,0.22],[123,3,0.42],[110,3.5,0.22],
+];
+// Chord stabs (square wave, staccato)
+const CHORDS = [
+  [[220,277,330], 0.75, 0.08],
+  [[220,277,330], 1.75, 0.08],
+  [[196,247,294], 2.75, 0.08],
+  [[196,247,294], 3.75, 0.08],
+];
+
+function playLoop(startT) {
+  if (!musicPlaying) return;
+  const barLen = 4 * B;  // 1 bar = 4 beats
+
+  // 2 bars per loop = 8 beats
+  for (let bar = 0; bar < 2; bar++) {
+    const bStart = startT + bar * barLen;
+
+    // Dembow drum pattern per bar (16th note grid = B/4)
+    const grid = B / 4;
+    // Kick: beats 1,2,3,4 + dembow offbeat after beat 2 (step 9 of 16)
+    [0,4,8,12].forEach(step => kick8(bStart + step * grid));
+    kick8(bStart + 9 * grid);  // dembow kick
+
+    // Snare: beats 2 and 4
+    snare8(bStart + 4 * grid);
+    snare8(bStart + 12 * grid);
+
+    // Hi-hat on every 8th note
+    for (let i = 0; i < 8; i++) hihat8(bStart + i * B * 0.5, i % 2 === 0 ? 0.22 : 0.12);
+
+    // Melody (only bar 0)
+    if (bar === 0) {
+      MELODY.forEach(([freq, off, dur]) => n8(freq, bStart + off * B, dur * B * 0.9, 0.09, 'square'));
+    } else {
+      // Bar 1: melody up an octave
+      MELODY.forEach(([freq, off, dur]) => n8(freq > 0 ? freq * 2 : 0, bStart + off * B, dur * B * 0.9, 0.06, 'square'));
+    }
+
+    // Bass
+    BASS.forEach(([freq, off, dur]) => n8(freq, bStart + off * B, dur * B * 0.92, 0.14, 'square'));
+
+    // Chord stabs
+    CHORDS.forEach(([freqs, off, dur]) => {
+      freqs.forEach(f => n8(f, bStart + off * B, dur * B, 0.04, 'square'));
+    });
+  }
+
+  const totalLen = 2 * barLen;
+  loopTimeout = setTimeout(() => playLoop(AC.currentTime + 0.02), (totalLen - 0.05) * 1000);
+}
+
+function toggleMusic() {
+  AC.resume().then(() => {
+    musicPlaying = !musicPlaying;
+    const btn = document.getElementById('music-btn');
+    if (musicPlaying) {
+      btn.textContent = '🔊';
+      playLoop(AC.currentTime + 0.05);
+    } else {
+      btn.textContent = '🎵';
+      clearTimeout(loopTimeout);
+      musicGain.gain.setValueAtTime(musicGain.gain.value, AC.currentTime);
+      musicGain.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + 0.3);
+      setTimeout(() => {
+        musicGain.gain.value = 0.55;
+      }, 400);
+    }
+  });
+}
+</script>
+</body>
+</html>
