@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factorización · Sesión Interactiva · Profe Quilamapu</title>
+<style>
+:root{
+  --papel:#FAFBF7; --cuadricula:#DDE8E2; --tinta:#1B3A4B; --tinta-suave:#4A6572;
+  --pizarra:#0E4D3A; --pizarra-clara:#E6F2EC;
+  --c1:#0E7A4D; --c1bg:#E4F4EB;
+  --c2:#1D5FBF; --c2bg:#E6EEFB;
+  --c3:#7C3AAD; --c3bg:#F1E8F9;
+  --c4:#C96A10; --c4bg:#FBEEDD;
+  --ok:#15803D; --okbg:#DCFCE7; --mal:#B91C1C; --malbg:#FEE2E2;
+  --carta:#FFFFFF; --borde:#D6DED8; --sombra:0 2px 8px rgba(27,58,75,.10);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:"Segoe UI", "Avenir Next", Verdana, sans-serif;
+  color:var(--tinta); background:var(--papel);
+  background-image:
+    linear-gradient(var(--cuadricula) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cuadricula) 1px, transparent 1px);
+  background-size:26px 26px;
+  min-height:100vh;
+}
+header{
+  background:var(--pizarra); color:#fff; padding:12px 18px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  box-shadow:0 2px 10px rgba(0,0,0,.25); position:sticky; top:0; z-index:50;
+}
+.marca{display:flex; flex-direction:column;}
+.marca .logo{font-weight:800; font-size:1.15rem; letter-spacing:.5px;}
+.marca .sub{font-size:.75rem; opacity:.85;}
+.reloj{display:flex; align-items:center; gap:10px;}
+#tiempo{font-variant-numeric:tabular-nums; font-weight:800; font-size:1.5rem; letter-spacing:1px;
+  background:rgba(255,255,255,.12); padding:4px 14px; border-radius:10px;}
+#tiempo.alerta{background:#C96A10;}
+#tiempo.critico{background:#B91C1C; animation:parp 1s infinite;}
+@keyframes parp{50%{opacity:.55;}}
+.btn-reloj{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.4); color:#fff;
+  border-radius:8px; padding:6px 12px; cursor:pointer; font-size:.85rem; font-weight:600;}
+.btn-reloj:hover{background:rgba(255,255,255,.28);}
+nav{
+  display:flex; gap:6px; padding:10px 14px; flex-wrap:wrap; justify-content:center;
+  background:rgba(250,251,247,.92); backdrop-filter:blur(4px);
+  position:sticky; top:64px; z-index:40; border-bottom:2px solid var(--borde);
+}
+.tab{
+  border:2px solid var(--borde); background:var(--carta); color:var(--tinta-suave);
+  padding:8px 14px; border-radius:10px; cursor:pointer; font-weight:700; font-size:.88rem;
+  border-bottom-width:4px;
+}
+.tab:hover{border-color:var(--tinta-suave);}
+.tab.activa{color:#fff; background:var(--tinta); border-color:var(--tinta);}
+.tab[data-sec="c1"].activa{background:var(--c1); border-color:var(--c1);}
+.tab[data-sec="c2"].activa{background:var(--c2); border-color:var(--c2);}
+.tab[data-sec="c3"].activa{background:var(--c3); border-color:var(--c3);}
+.tab[data-sec="c4"].activa{background:var(--c4); border-color:var(--c4);}
+main{max-width:920px; margin:0 auto; padding:22px 16px 80px;}
+section{display:none;}
+section.visible{display:block; animation:entra .25s ease;}
+@keyframes entra{from{opacity:0; transform:translateY(8px);} to{opacity:1;}}
+.carta{
+  background:var(--carta); border:1px solid var(--borde); border-radius:14px;
+  box-shadow:var(--sombra); padding:20px 22px; margin-bottom:18px; position:relative; overflow:hidden;
+}
+.carta.pestana::before{content:""; position:absolute; left:0; top:0; bottom:0; width:8px; background:var(--col,var(--tinta));}
+h1{font-size:1.6rem; margin-bottom:6px;}
+h2{font-size:1.25rem; margin-bottom:10px;}
+h3{font-size:1.02rem; margin:12px 0 6px;}
+p{line-height:1.55; margin-bottom:8px;}
+.eyebrow{font-size:.72rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--col,var(--tinta-suave)); margin-bottom:2px;}
+.mate{font-family:Georgia, "Times New Roman", serif; font-style:italic;}
+.expresion{
+  font-family:Georgia, serif; font-size:1.45rem; text-align:center; padding:12px;
+  background:var(--papel); border:1.5px dashed var(--borde); border-radius:10px; margin:10px 0;
+}
+ul.lista{margin:6px 0 10px 22px; line-height:1.6;}
+.agenda{width:100%; border-collapse:collapse; margin-top:8px;}
+.agenda td{padding:8px 10px; border-bottom:1px solid var(--borde); font-size:.95rem;}
+.agenda td:first-child{font-weight:800; white-space:nowrap; color:var(--pizarra);}
+.chip-caso{display:inline-block; font-size:.75rem; font-weight:800; padding:3px 10px; border-radius:20px; color:#fff; background:var(--col,var(--tinta));}
+.paso{margin-top:14px; padding-top:12px; border-top:1px solid var(--borde);}
+.paso .preg{font-weight:700; margin-bottom:8px;}
+.opciones{display:flex; gap:8px; flex-wrap:wrap;}
+.opcion{
+  border:2px solid var(--borde); background:var(--carta); border-radius:10px;
+  padding:9px 16px; cursor:pointer; font-size:1.02rem; font-family:Georgia, serif; font-weight:600;
+}
+.opcion:hover:not(:disabled){border-color:var(--col,var(--tinta));}
+.opcion.buena{background:var(--okbg); border-color:var(--ok); color:var(--ok);}
+.opcion.malita{background:var(--malbg); border-color:var(--mal); color:var(--mal);}
+.opcion:disabled{cursor:default; opacity:.9;}
+.pista{font-size:.9rem; margin-top:8px; padding:8px 12px; border-radius:8px; display:none;}
+.pista.ok{display:block; background:var(--okbg); color:var(--ok);}
+.pista.mal{display:block; background:var(--malbg); color:var(--mal);}
+.respFinal{
+  display:none; margin-top:14px; padding:12px 16px; border-radius:10px;
+  background:var(--pizarra-clara); border:2px solid var(--pizarra);
+  font-family:Georgia, serif; font-size:1.25rem; font-weight:700; color:var(--pizarra); text-align:center;
+}
+.respFinal.mostrar{display:block; animation:entra .3s ease;}
+/* Ejercitación */
+.barra-progreso{height:12px; background:var(--borde); border-radius:8px; overflow:hidden; margin:8px 0 4px;}
+.barra-progreso > div{height:100%; width:0%; background:var(--pizarra); transition:width .3s;}
+.marcadores{display:flex; justify-content:space-between; font-size:.85rem; color:var(--tinta-suave); margin-bottom:14px;}
+.sel-casos{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;}
+.sel-caso{border:2px solid var(--borde); background:var(--carta); border-radius:20px; padding:7px 14px; cursor:pointer; font-weight:700; font-size:.85rem;}
+.sel-caso:hover:not(:disabled){transform:translateY(-1px);}
+.sel-caso:disabled{cursor:default;}
+.sel-caso.buena{background:var(--okbg); border-color:var(--ok); color:var(--ok);}
+.sel-caso.malita{background:var(--malbg); border-color:var(--mal); color:var(--mal);}
+.zona-resp{display:none; margin-top:12px;}
+.zona-resp.mostrar{display:block;}
+.fila-input{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.inp-resp{
+  flex:1; min-width:220px; font-family:Georgia, serif; font-size:1.15rem;
+  padding:10px 12px; border:2px solid var(--borde); border-radius:10px; color:var(--tinta);
+}
+.inp-resp:focus{outline:none; border-color:var(--pizarra);}
+.btn{border:none; border-radius:10px; padding:10px 18px; font-weight:800; cursor:pointer; font-size:.95rem;}
+.btn-check{background:var(--pizarra); color:#fff;}
+.btn-check:hover{filter:brightness(1.15);}
+.btn-rev{background:var(--carta); border:2px solid var(--borde); color:var(--tinta-suave);}
+.btn-sup{border:1.5px solid var(--borde); background:var(--papel); border-radius:8px; padding:8px 12px; cursor:pointer; font-size:1rem; font-weight:700;}
+.btn-sup:hover{border-color:var(--pizarra);}
+.nav-ej{display:flex; justify-content:space-between; margin-top:16px; gap:10px;}
+.btn-nav{background:var(--tinta); color:#fff;}
+.btn-nav:disabled{opacity:.35; cursor:default;}
+.estado-ej{font-size:.9rem; font-weight:700; margin-top:10px; padding:8px 12px; border-radius:8px; display:none;}
+.estado-ej.ok{display:block; background:var(--okbg); color:var(--ok);}
+.estado-ej.mal{display:block; background:var(--malbg); color:var(--mal);}
+.mapa{display:grid; grid-template-columns:repeat(auto-fill, minmax(34px,1fr)); gap:6px; margin-top:14px;}
+.punto{
+  aspect-ratio:1; border-radius:8px; border:2px solid var(--borde); background:var(--carta);
+  font-size:.75rem; font-weight:800; cursor:pointer; color:var(--tinta-suave);
+}
+.punto.actual{border-color:var(--tinta); color:var(--tinta);}
+.punto.bien{background:var(--okbg); border-color:var(--ok); color:var(--ok);}
+.punto.mal{background:var(--malbg); border-color:var(--mal); color:var(--mal);}
+/* Resultados */
+.nota-grande{
+  font-size:4.2rem; font-weight:900; text-align:center; font-variant-numeric:tabular-nums;
+  font-family:Georgia, serif;
+}
+.detalle-casos{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:14px;}
+.mini-caso{border:1px solid var(--borde); border-left:8px solid var(--col); border-radius:10px; padding:12px 14px; background:var(--carta);}
+.mini-caso .num{font-size:1.6rem; font-weight:900;}
+.centrado{text-align:center;}
+footer{ text-align:center; padding:20px; color:var(--tinta-suave); font-size:.8rem;}
+@media (max-width:600px){
+  nav{top:98px;}
+  #tiempo{font-size:1.15rem;}
+  .expresion{font-size:1.2rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">
+    <span class="logo">📗 Profe Quilamapu</span>
+    <span class="sub">Sesión interactiva · Los 4 casos de factorización</span>
+  </div>
+  <div class="reloj">
+    <span id="tiempo">2:00:00</span>
+    <button class="btn-reloj" id="btnReloj">▶ Iniciar</button>
+  </div>
+</header>
+
+<nav id="menu">
+  <button class="tab activa" data-sec="inicio">🏠 Inicio</button>
+  <button class="tab" data-sec="c1">1 · Factor Común</button>
+  <button class="tab" data-sec="c2">2 · Agrupación</button>
+  <button class="tab" data-sec="c3">3 · Dif. Cuadrados</button>
+  <button class="tab" data-sec="c4">4 · TCP</button>
+  <button class="tab" data-sec="ejercitacion">✏️ Ejercitación</button>
+  <button class="tab" data-sec="resultados">🏆 Resultados</button>
+</nav>
+
+<main>
+
+<!-- ==================== INICIO ==================== -->
+<section id="sec-inicio" class="visible">
+  <div class="carta">
+    <div class="eyebrow">Sesión de 2 horas</div>
+    <h1>Los 4 casos de factorización</h1>
+    <p>Hoy vamos a aprender a <strong>factorizar</strong>: escribir un polinomio como una <em>multiplicación de factores</em>. Trabajaremos los 4 casos principales con ejemplos guiados donde tú vas respondiendo cada paso, y cerraremos con 28 ejercicios mezclados para poner a prueba lo aprendido.</p>
+    <h3>📋 Plan de la sesión</h3>
+    <table class="agenda">
+      <tr><td>0:00 – 0:05</td><td>Bienvenida y plan de trabajo</td></tr>
+      <tr><td>0:05 – 0:23</td><td><span class="chip-caso" style="--col:var(--c1)">Caso 1</span> Factor Común</td></tr>
+      <tr><td>0:23 – 0:41</td><td><span class="chip-caso" style="--col:var(--c2)">Caso 2</span> Factor Común por Agrupación</td></tr>
+      <tr><td>0:41 – 0:59</td><td><span class="chip-caso" style="--col:var(--c3)">Caso 3</span> Diferencia de Cuadrados Perfectos</td></tr>
+      <tr><td>0:59 – 1:17</td><td><span class="chip-caso" style="--col:var(--c4)">Caso 4</span> Trinomio Cuadrado Perfecto</td></tr>
+      <tr><td>1:17 – 1:52</td><td>✏️ Ejercitación: 28 ejercicios mezclados</td></tr>
+      <tr><td>1:52 – 2:00</td><td>🏆 Revisión de resultados y cierre</td></tr>
+    </table>
+    <p style="margin-top:12px;">▶ Presiona <strong>Iniciar</strong> en el reloj de arriba cuando comencemos, y parte por la pestaña <strong>1 · Factor Común</strong>.</p>
+  </div>
+</section>
+
+<!-- Las secciones de casos y ejercitación se generan con JavaScript -->
+<section id="sec-c1"></section>
+<section id="sec-c2"></section>
+<section id="sec-c3"></section>
+<section id="sec-c4"></section>
+
+<section id="sec-ejercitacion">
+  <div class="carta">
+    <div class="eyebrow">Ejercitación final</div>
+    <h2>28 ejercicios mezclados</h2>
+    <p>Para cada ejercicio: <strong>1)</strong> identifica el caso de factorización y <strong>2)</strong> escribe la factorización. Cada parte vale 1 punto (máximo 56 puntos). Tienes 2 intentos para escribir la respuesta.</p>
+    <div class="barra-progreso"><div id="barraEj"></div></div>
+    <div class="marcadores"><span id="txtProgreso">Ejercicio 1 de 28</span><span id="txtPuntos">0 / 56 pts</span></div>
+    <div id="zonaEjercicio"></div>
+    <div class="nav-ej">
+      <button class="btn btn-nav" id="btnAnt">← Anterior</button>
+      <button class="btn btn-nav" id="btnSig">Siguiente →</button>
+    </div>
+    <div class="mapa" id="mapaEj"></div>
+  </div>
+</section>
+
+<section id="sec-resultados">
+  <div class="carta centrado">
+    <div class="eyebrow">Resultados de la sesión</div>
+    <h2 id="tituloRes">Aún no hay ejercicios respondidos</h2>
+    <div class="nota-grande" id="notaGrande">—</div>
+    <p id="detalleNota"></p>
+    <div class="detalle-casos" id="detalleCasos"></div>
+    <p id="mensajeFinal" style="margin-top:16px; font-weight:600;"></p>
+    <button class="btn btn-check" id="btnReiniciar" style="margin-top:10px;">↺ Reiniciar ejercitación</button>
+  </div>
+</section>
+
+</main>
+<footer>Profe Quilamapu · Guía interactiva de factorización · Funciona sin internet</footer>
+
+<script>
+/* ============ SONIDOS (Web Audio) ============ */
+let ctxAudio = null;
+function tono(f, dur, tipo, t0, vol){
+  const o = ctxAudio.createOscillator(), g = ctxAudio.createGain();
+  o.type = tipo; o.frequency.value = f;
+  g.gain.setValueAtTime(vol, ctxAudio.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(0.001, ctxAudio.currentTime + t0 + dur);
+  o.connect(g); g.connect(ctxAudio.destination);
+  o.start(ctxAudio.currentTime + t0); o.stop(ctxAudio.currentTime + t0 + dur);
+}
+function sonido(bien){
+  try{
+    if(!ctxAudio) ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+    if(bien){ tono(660,.12,"sine",0,.18); tono(880,.18,"sine",.11,.18); }
+    else{ tono(196,.25,"square",0,.10); }
+  }catch(e){}
+}
+function fanfarria(){
+  try{
+    if(!ctxAudio) ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+    [523,659,784,1046].forEach((f,i)=>tono(f,.22,"triangle",i*.14,.16));
+  }catch(e){}
+}
+
+/* ============ RELOJ DE SESIÓN (2 horas) ============ */
+let segundos = 7200, corriendo = false, intervalo = null;
+const elTiempo = document.getElementById("tiempo");
+const btnReloj = document.getElementById("btnReloj");
+function pintaTiempo(){
+  const h = Math.floor(segundos/3600), m = Math.floor((segundos%3600)/60), s = segundos%60;
+  elTiempo.textContent = h + ":" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+  elTiempo.classList.toggle("alerta", segundos <= 900 && segundos > 300);
+  elTiempo.classList.toggle("critico", segundos <= 300);
+}
+btnReloj.addEventListener("click", ()=>{
+  corriendo = !corriendo;
+  btnReloj.textContent = corriendo ? "⏸ Pausar" : "▶ Continuar";
+  if(corriendo){
+    intervalo = setInterval(()=>{
+      if(segundos > 0){ segundos--; pintaTiempo(); }
+      else{ clearInterval(intervalo); corriendo = false; btnReloj.textContent = "⏱ Fin"; }
+    }, 1000);
+  } else clearInterval(intervalo);
+});
+pintaTiempo();
+
+/* ============ NAVEGACIÓN ============ */
+document.getElementById("menu").addEventListener("click", e=>{
+  const t = e.target.closest(".tab"); if(!t) return;
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("activa"));
+  t.classList.add("activa");
+  document.querySelectorAll("main section").forEach(s=>s.classList.remove("visible"));
+  document.getElementById("sec-" + t.dataset.sec).classList.add("visible");
+  if(t.dataset.sec === "resultados") pintaResultados();
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* ============ DATOS: CASOS Y EJEMPLOS GUIADOS ============ */
+const CASOS = {
+  c1:{ n:1, nombre:"Factor Común", col:"var(--c1)",
+    cuando:"Es el primer caso que siempre debemos revisar. Se aplica cuando todos los términos comparten un mismo factor: un número, una letra, o ambos.",
+    como:["De los coeficientes se extrae el M.C.D. (máximo común divisor).","De las letras repetidas en todos los términos, se extrae la de menor exponente.","Se escribe el factor común seguido de un paréntesis con lo que queda de cada término."],
+    ejemplos:[
+      { t:"4x + 8y", res:"4(x + 2y)", pasos:[
+        {q:"¿Cuál es el M.C.D. de 4 y 8?", ops:["2","4","8"], a:1, exp:"4 es el número más grande que divide exactamente a 4 y a 8. (El 8 no divide al 4, y el 2 divide a ambos pero no es el mayor)."},
+        {q:"Entonces, ¿cómo queda la factorización?", ops:["4(x + 2y)","4(x + 8y)","2(2x + 4y)"], a:0, exp:"4x ÷ 4 = x  y  8y ÷ 4 = 2y. La opción 2(2x + 4y) es correcta como producto, ¡pero no sacamos el MAYOR factor común!"}
+      ]},
+      { t:"6a² − 9a", res:"3a(2a − 3)", pasos:[
+        {q:"¿Cuál es el factor común completo (número y letra)?", ops:["3","a","3a"], a:2, exp:"El M.C.D. de 6 y 9 es 3, y la letra «a» se repite en ambos términos con menor exponente 1. Factor común: 3a."},
+        {q:"¿Cuál es la factorización?", ops:["3a(2a − 3)","3(2a² − 3a)","3a(2a − 3a)"], a:0, exp:"6a² ÷ 3a = 2a  y  9a ÷ 3a = 3."}
+      ]},
+      { t:"5x³ + 10x² − 15x", res:"5x(x² + 2x − 3)", pasos:[
+        {q:"¿Cuál es el factor común?", ops:["5x²","5x","x³"], a:1, exp:"M.C.D. de 5, 10 y 15 es 5; la «x» está en los tres términos y su menor exponente es 1 → factor común 5x."},
+        {q:"¿Cuál es la factorización?", ops:["5x(x² + 2x − 3)","5x(x³ + 2x² − 3x)","5x(x² + 2x + 3)"], a:0, exp:"5x³ ÷ 5x = x², 10x² ÷ 5x = 2x, −15x ÷ 5x = −3. ¡Cuidado con el signo!"}
+      ]}
+    ]},
+  c2:{ n:2, nombre:"Factor Común por Agrupación de Términos", col:"var(--c2)",
+    cuando:"Se aplica en polinomios de 4, 6, 8 o más términos (cantidad par), cuando ya verificamos que NO existe un factor común para todos los términos a la vez.",
+    como:["Se forman grupos con igual número de términos que tengan algo en común.","Se extrae el factor común de cada grupo (aplicando el Caso 1).","¡Cuidado! Si un paréntesis queda precedido por signo negativo, los signos de adentro cambian.","Finalmente se extrae el paréntesis repetido como factor común de toda la expresión."],
+    ejemplos:[
+      { t:"ax + ay + bx + by", res:"(x + y)(a + b)", pasos:[
+        {q:"¿Cuál agrupación nos conviene?", ops:["(ax + ay) + (bx + by)","(ax + by) + (ay + bx)"], a:0, exp:"Agrupamos los términos que comparten algo: los dos primeros tienen «a» y los dos últimos tienen «b». En la otra agrupación los términos de cada grupo no comparten factor."},
+        {q:"Al extraer el factor común de cada grupo queda…", ops:["a(x + y) + b(x + y)","a(x + y) + b(x − y)","ab(x + y)"], a:0, exp:"Del primer grupo sale «a» y del segundo sale «b»; en ambos queda el MISMO paréntesis (x + y). ¡Esa es la clave!"},
+        {q:"El paréntesis (x + y) se repite. ¿Factorización final?", ops:["(x + y)(a + b)","(x + y) + (a + b)","(ax + by)(a + b)"], a:0, exp:"Extraemos (x + y) como factor común de toda la expresión: queda multiplicando a (a + b)."}
+      ]},
+      { t:"x² + xy + 3x + 3y", res:"(x + y)(x + 3)", pasos:[
+        {q:"Agrupamos (x² + xy) + (3x + 3y). ¿Qué factor común tiene cada grupo?", ops:["«x» y «3»","«x²» y «3y»","«xy» y «3x»"], a:0, exp:"Del primer grupo sale x → x(x + y). Del segundo sale 3 → 3(x + y)."},
+        {q:"Queda x(x + y) + 3(x + y). ¿Factorización final?", ops:["(x + y)(x + 3)","(x + 3)(x − y)","x·3(x + y)"], a:0, exp:"El paréntesis repetido (x + y) sale como factor común, y queda (x + 3)."}
+      ]},
+      { t:"2m + 2n + pm + pn", res:"(m + n)(2 + p)", pasos:[
+        {q:"¿Cómo queda tras factorizar cada grupo (2m + 2n) + (pm + pn)?", ops:["2(m + n) + p(m + n)","2(m + n) + p(m − n)","2m(1 + n) + p(m + n)"], a:0, exp:"Del primer grupo sale el 2 y del segundo la p; en ambos queda (m + n)."},
+        {q:"¿Factorización final?", ops:["(m + n)(2 + p)","(2 + p) + (m + n)","2p(m + n)"], a:0, exp:"El paréntesis (m + n) se extrae como factor común y queda multiplicando a (2 + p)."}
+      ]}
+    ]},
+  c3:{ n:3, nombre:"Diferencia de Cuadrados Perfectos", col:"var(--c3)",
+    cuando:"Solamente en binomios donde el primer término es positivo y el segundo es negativo (una RESTA). Ambos deben ser cuadrados perfectos: coeficientes con raíz cuadrada exacta (1, 4, 9, 16, 25, 36, 49…) y exponentes pares en las letras (2, 4, 6, 8…).",
+    como:["Se extrae la raíz cuadrada de cada término (los exponentes de las letras se dividen entre 2).","Se abren dos paréntesis multiplicándose: en el primero las raíces van SUMANDO y en el segundo van RESTANDO (suma por diferencia)."],
+    ejemplos:[
+      { t:"x² − 16", res:"(x + 4)(x − 4)", pasos:[
+        {q:"¿Cuáles son las raíces cuadradas de x² y de 16?", ops:["x  y  4","x  y  8","x²  y  4"], a:0, exp:"√x² = x (el exponente se divide entre 2) y √16 = 4."},
+        {q:"¿Factorización final?", ops:["(x + 4)(x − 4)","(x − 4)(x − 4)","(x + 4)(x + 4)"], a:0, exp:"Suma por diferencia: un paréntesis con + y otro con −."}
+      ]},
+      { t:"9a² − 25", res:"(3a + 5)(3a − 5)", pasos:[
+        {q:"¿Cuál es la raíz cuadrada de 9a²?", ops:["3a","9a","3a²"], a:0, exp:"√9 = 3 y √a² = a → la raíz es 3a."},
+        {q:"Con √25 = 5, ¿la factorización es…?", ops:["(3a + 5)(3a − 5)","(9a + 5)(9a − 5)","(3a − 5)(3a − 5)"], a:0, exp:"Las raíces 3a y 5 van en dos paréntesis: uno sumando y otro restando."}
+      ]},
+      { t:"49x² − 36y²", res:"(7x + 6y)(7x − 6y)", pasos:[
+        {q:"¿Cuáles son las raíces de cada término?", ops:["7x  y  6y","7x²  y  6y²","49x  y  36y"], a:0, exp:"√49x² = 7x  y  √36y² = 6y."},
+        {q:"¿Factorización final?", ops:["(7x + 6y)(7x − 6y)","(7x + 6y)(7x + 6y)","(7x − 6y)²"], a:0, exp:"Suma por diferencia con las dos raíces."}
+      ]}
+    ]},
+  c4:{ n:4, nombre:"Trinomio Cuadrado Perfecto (TCP)", col:"var(--c4)",
+    cuando:"En trinomios ordenados donde el primer y el tercer término son positivos y cuadrados perfectos, y el término central corresponde al DOBLE PRODUCTO de esas raíces.",
+    como:["Se extrae la raíz cuadrada del primer y del tercer término.","Se verifica: el doble producto de esas raíces debe dar el segundo término (sin fijarse en su signo). Si coincide, es un TCP.","La factorización es un binomio al cuadrado: las dos raíces, unidas por el signo del segundo término."],
+    ejemplos:[
+      { t:"x² + 6x + 9", res:"(x + 3)²", pasos:[
+        {q:"¿Raíces del primer y tercer término (x² y 9)?", ops:["x  y  3","x  y  9","x²  y  3"], a:0, exp:"√x² = x  y  √9 = 3."},
+        {q:"Verificación: ¿cuánto da el doble producto 2 · x · 3?", ops:["6x  ✓ ¡coincide!","3x","9x"], a:0, exp:"2 · x · 3 = 6x, que es exactamente el término central. ¡Es un TCP!"},
+        {q:"¿Factorización final?", ops:["(x + 3)²","(x + 3)(x − 3)","(x + 9)²"], a:0, exp:"Binomio al cuadrado con las raíces x y 3, unidas por el signo + del término central."}
+      ]},
+      { t:"4x² − 12x + 9", res:"(2x − 3)²", pasos:[
+        {q:"¿Raíces de 4x² y de 9?", ops:["2x  y  3","4x  y  3","2x²  y  3"], a:0, exp:"√4x² = 2x  y  √9 = 3."},
+        {q:"El doble producto 2 · 2x · 3 = 12x coincide. El término central es −12x, ¿qué signo lleva el binomio?", ops:["Negativo: (2x − 3)²","Positivo: (2x + 3)²"], a:0, exp:"El binomio lleva el signo del término central: negativo."}
+      ]},
+      { t:"25a² + 30a + 9", res:"(5a + 3)²", pasos:[
+        {q:"¿Raíces de 25a² y de 9?", ops:["5a  y  3","25a  y  3","5a  y  9"], a:0, exp:"√25a² = 5a  y  √9 = 3."},
+        {q:"¿Se cumple la verificación del doble producto?", ops:["Sí: 2 · 5a · 3 = 30a ✓","No: da 15a"], a:0, exp:"2 · 5a · 3 = 30a, igual al término central. Es TCP."},
+        {q:"¿Factorización final?", ops:["(5a + 3)²","(5a − 3)²","(25a + 3)²"], a:0, exp:"Raíces 5a y 3 con el signo + del término central, todo al cuadrado."}
+      ]}
+    ]}
+};
+
+/* ============ RENDER DE SECCIONES DE CASOS ============ */
+function renderCaso(clave){
+  const c = CASOS[clave];
+  const sec = document.getElementById("sec-" + clave);
+  let html = `<div class="carta pestana" style="--col:${c.col}">
+    <div class="eyebrow" style="--col:${c.col}">Caso ${c.n}</div>
+    <h2>${c.nombre}</h2>
+    <h3>¿Cuándo se aplica?</h3><p>${c.cuando}</p>
+    <h3>¿Cómo se factoriza?</h3><ul class="lista">${c.como.map(x=>`<li>${x}</li>`).join("")}</ul>
+  </div>`;
+  c.ejemplos.forEach((ej, i)=>{
+    html += `<div class="carta pestana" style="--col:${c.col}" id="${clave}-ej${i}">
+      <div class="eyebrow" style="--col:${c.col}">Ejemplo ${i+1} · Resuélvelo paso a paso</div>
+      <div class="expresion">Factorizar:&nbsp; ${ej.t}</div>
+      <div class="pasos"></div>
+      <div class="respFinal">✔ Respuesta: &nbsp;${ej.res}</div>
+    </div>`;
+  });
+  sec.innerHTML = html;
+  c.ejemplos.forEach((ej, i)=> montarPaso(clave, i, 0));
+}
+function montarPaso(clave, iEj, iPaso){
+  const c = CASOS[clave], ej = c.ejemplos[iEj];
+  const cont = document.querySelector(`#${clave}-ej${iEj} .pasos`);
+  if(iPaso >= ej.pasos.length){
+    const fin = document.querySelector(`#${clave}-ej${iEj} .respFinal`);
+    fin.classList.add("mostrar");
+    return;
+  }
+  const p = ej.pasos[iPaso];
+  const div = document.createElement("div");
+  div.className = "paso"; div.style.setProperty("--col", c.col);
+  div.innerHTML = `<div class="preg">Paso ${iPaso+1}: ${p.q}</div>
+    <div class="opciones">${p.ops.map((o,k)=>`<button class="opcion" data-k="${k}">${o}</button>`).join("")}</div>
+    <div class="pista"></div>`;
+  cont.appendChild(div);
+  const pista = div.querySelector(".pista");
+  div.querySelectorAll(".opcion").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const k = +btn.dataset.k;
+      if(k === p.a){
+        sonido(true);
+        btn.classList.add("buena");
+        div.querySelectorAll(".opcion").forEach(b=>b.disabled = true);
+        pista.className = "pista ok"; pista.textContent = "✔ " + p.exp;
+        setTimeout(()=>montarPaso(clave, iEj, iPaso+1), 350);
+      } else {
+        sonido(false);
+        btn.classList.add("malita"); btn.disabled = true;
+        pista.className = "pista mal"; pista.textContent = "✘ Aún no. Revisa el procedimiento e inténtalo de nuevo.";
+      }
+    });
+  });
+}
+["c1","c2","c3","c4"].forEach(renderCaso);
+
+/* ============ EJERCITACIÓN: 28 EJERCICIOS ============ */
+/* caso: 1=Factor común, 2=Agrupación, 3=Dif. cuadrados, 4=TCP */
+const EJ = [
+ {t:"3x + 3y", caso:1, res:"3(x + y)", acc:["3(x+y)"]},
+ {t:"x² − 81", caso:3, res:"(x + 9)(x − 9)", acc:["(x+9)(x-9)","(x-9)(x+9)"]},
+ {t:"x² + 8x + 16", caso:4, res:"(x + 4)²", acc:["(x+4)²","(x+4)(x+4)"]},
+ {t:"ax + bx + ay + by", caso:2, res:"(x + y)(a + b)", acc:["(x+y)(a+b)","(a+b)(x+y)","(y+x)(a+b)","(x+y)(b+a)"]},
+ {t:"10a − 15b", caso:1, res:"5(2a − 3b)", acc:["5(2a-3b)"]},
+ {t:"4x² − 25", caso:3, res:"(2x + 5)(2x − 5)", acc:["(2x+5)(2x-5)","(2x-5)(2x+5)"]},
+ {t:"x² − 10x + 25", caso:4, res:"(x − 5)²", acc:["(x-5)²","(x-5)(x-5)"]},
+ {t:"x² + 2x + xy + 2y", caso:2, res:"(x + 2)(x + y)", acc:["(x+2)(x+y)","(x+y)(x+2)","(2+x)(x+y)","(x+2)(y+x)"]},
+ {t:"7x² + 14x", caso:1, res:"7x(x + 2)", acc:["7x(x+2)","7x(2+x)"]},
+ {t:"36 − a²", caso:3, res:"(6 + a)(6 − a)", acc:["(6+a)(6-a)","(6-a)(6+a)","(a+6)(6-a)"]},
+ {t:"9x² + 6x + 1", caso:4, res:"(3x + 1)²", acc:["(3x+1)²","(3x+1)(3x+1)","(1+3x)²"]},
+ {t:"3m + 3n + am + an", caso:2, res:"(m + n)(3 + a)", acc:["(m+n)(3+a)","(3+a)(m+n)","(m+n)(a+3)","(a+3)(m+n)"]},
+ {t:"4m³ − 8m²", caso:1, res:"4m²(m − 2)", acc:["4m²(m-2)"]},
+ {t:"16m² − 49n²", caso:3, res:"(4m + 7n)(4m − 7n)", acc:["(4m+7n)(4m-7n)","(4m-7n)(4m+7n)"]},
+ {t:"4a² − 20a + 25", caso:4, res:"(2a − 5)²", acc:["(2a-5)²","(2a-5)(2a-5)"]},
+ {t:"x³ + x² + 2x + 2", caso:2, res:"(x + 1)(x² + 2)", acc:["(x+1)(x²+2)","(x²+2)(x+1)","(1+x)(x²+2)","(x+1)(2+x²)"]},
+ {t:"6ab + 9a", caso:1, res:"3a(2b + 3)", acc:["3a(2b+3)","3a(3+2b)"]},
+ {t:"100x² − 1", caso:3, res:"(10x + 1)(10x − 1)", acc:["(10x+1)(10x-1)","(10x-1)(10x+1)"]},
+ {t:"x² + 14x + 49", caso:4, res:"(x + 7)²", acc:["(x+7)²","(x+7)(x+7)","(7+x)²"]},
+ {t:"2a + 2b + ca + cb", caso:2, res:"(a + b)(2 + c)", acc:["(a+b)(2+c)","(2+c)(a+b)","(a+b)(c+2)","(c+2)(a+b)"]},
+ {t:"12x²y − 18xy²", caso:1, res:"6xy(2x − 3y)", acc:["6xy(2x-3y)"]},
+ {t:"a⁴ − 9", caso:3, res:"(a² + 3)(a² − 3)", acc:["(a²+3)(a²-3)","(a²-3)(a²+3)","(3+a²)(a²-3)"]},
+ {t:"16m² + 24m + 9", caso:4, res:"(4m + 3)²", acc:["(4m+3)²","(4m+3)(4m+3)","(3+4m)²"]},
+ {t:"xy + 4x + 2y + 8", caso:2, res:"(y + 4)(x + 2)", acc:["(y+4)(x+2)","(x+2)(y+4)","(4+y)(x+2)","(y+4)(2+x)"]},
+ {t:"5p + 5q − 5r", caso:1, res:"5(p + q − r)", acc:["5(p+q-r)","5(q+p-r)"]},
+ {t:"64x² − 121y²", caso:3, res:"(8x + 11y)(8x − 11y)", acc:["(8x+11y)(8x-11y)","(8x-11y)(8x+11y)"]},
+ {t:"25x² − 40x + 16", caso:4, res:"(5x − 4)²", acc:["(5x-4)²","(5x-4)(5x-4)"]},
+ {t:"6x + 3 + 2xy + y", caso:2, res:"(2x + 1)(3 + y)", acc:["(2x+1)(3+y)","(3+y)(2x+1)","(2x+1)(y+3)","(y+3)(2x+1)"]}
+];
+const NOMBRE_CASO = {1:"Factor común", 2:"Agrupación", 3:"Dif. de cuadrados", 4:"TCP"};
+const COL_CASO = {1:"var(--c1)", 2:"var(--c2)", 3:"var(--c3)", 4:"var(--c4)"};
+
+/* estado por ejercicio: {caso:null|true|false, resp:null|true|false, intentos:0, cerrado:false} */
+let estado = EJ.map(()=>({caso:null, resp:null, intentos:0, cerrado:false}));
+let actual = 0;
+
+function normaliza(s){
+  return s.toLowerCase()
+    .replace(/\s+/g,"")
+    .replace(/[−–—]/g,"-")
+    .replace(/[*·⋅]/g,"")
+    .replace(/\^2/g,"²").replace(/\^3/g,"³").replace(/\^4/g,"⁴")
+    .replace(/([a-z])2(?![0-9])/g,"$1²")  /* tolera "m2" como m² */
+    .replace(/([a-z])3(?![0-9])/g,"$1³")
+    .replace(/([a-z])4(?![0-9])/g,"$1⁴");
+}
+
+function puntos(){
+  let p = 0;
+  estado.forEach(e=>{ if(e.caso === true) p++; if(e.resp === true) p++; });
+  return p;
+}
+
+const zona = document.getElementById("zonaEjercicio");
+function pintaEjercicio(){
+  const ej = EJ[actual], st = estado[actual];
+  document.getElementById("txtProgreso").textContent = `Ejercicio ${actual+1} de 28`;
+  document.getElementById("txtPuntos").textContent = `${puntos()} / 56 pts`;
+  const respondidos = estado.filter(e=>e.cerrado).length;
+  document.getElementById("barraEj").style.width = (respondidos/28*100) + "%";
+  document.getElementById("btnAnt").disabled = actual === 0;
+  document.getElementById("btnSig").disabled = actual === 27;
+
+  let html = `<div class="expresion">Factorizar:&nbsp; ${ej.t}</div>
+    <h3>Paso 1 · ¿Qué caso de factorización es?</h3>
+    <div class="sel-casos">`;
+  for(let c=1; c<=4; c++){
+    let cls = "sel-caso";
+    if(st.caso !== null){
+      if(c === ej.caso) cls += " buena";
+      else if(st.caso === false && c === st.casoElegido) cls += " malita";
+    }
+    html += `<button class="${cls}" data-c="${c}" ${st.caso!==null?"disabled":""} style="--col:${COL_CASO[c]}">Caso ${c} · ${NOMBRE_CASO[c]}</button>`;
+  }
+  html += `</div>
+    <div class="zona-resp ${st.caso!==null?"mostrar":""}">
+      <h3>Paso 2 · Escribe la factorización</h3>
+      <div class="fila-input">
+        <input class="inp-resp" id="inpResp" placeholder="Ej: (x + 3)(x − 3)" autocomplete="off" ${st.cerrado?"disabled":""} value="${st.textoResp||""}">
+        <button class="btn-sup" data-s="²" title="Insertar exponente 2">²</button>
+        <button class="btn-sup" data-s="³" title="Insertar exponente 3">³</button>
+        <button class="btn-sup" data-s="⁴" title="Insertar exponente 4">⁴</button>
+        <button class="btn btn-check" id="btnCheck" ${st.cerrado?"disabled":""}>Revisar</button>
+        <button class="btn btn-rev" id="btnRev" ${st.cerrado?"disabled":""}>Ver solución</button>
+      </div>
+      <div class="estado-ej" id="estadoEj"></div>
+    </div>`;
+  zona.innerHTML = html;
+
+  /* feedback persistente si ya está cerrado */
+  const est = document.getElementById("estadoEj");
+  if(st.cerrado){
+    if(st.resp === true){ est.className = "estado-ej ok"; est.textContent = "✔ ¡Correcto! " + ej.t + " = " + ej.res; }
+    else{ est.className = "estado-ej mal"; est.textContent = "La respuesta era: " + ej.res + " (" + NOMBRE_CASO[ej.caso] + ")"; }
+  } else if(st.caso === false){
+    est.className = "estado-ej mal";
+    est.textContent = "El caso correcto era: " + NOMBRE_CASO[ej.caso] + ". Ahora intenta la factorización.";
+  } else if(st.caso === true){
+    est.className = "estado-ej ok";
+    est.textContent = "✔ ¡Caso correcto! Ahora escribe la factorización.";
+  }
+
+  /* selección de caso */
+  zona.querySelectorAll(".sel-caso").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const c = +b.dataset.c;
+      st.casoElegido = c;
+      st.caso = (c === ej.caso);
+      sonido(st.caso);
+      pintaEjercicio();
+      const inp = document.getElementById("inpResp"); if(inp) inp.focus();
+    });
+  });
+
+  /* botones de superíndice */
+  zona.querySelectorAll(".btn-sup").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const inp = document.getElementById("inpResp"); if(!inp || inp.disabled) return;
+      const pos = inp.selectionStart ?? inp.value.length;
+      inp.value = inp.value.slice(0,pos) + b.dataset.s + inp.value.slice(pos);
+      inp.focus(); inp.selectionStart = inp.selectionEnd = pos + 1;
+    });
+  });
+
+  /* revisar respuesta */
+  const revisar = ()=>{
+    const inp = document.getElementById("inpResp");
+    if(!inp.value.trim()){ inp.focus(); return; }
+    st.textoResp = inp.value;
+    const ok = ej.acc.includes(normaliza(inp.value));
+    if(ok){
+      st.resp = true; st.cerrado = true; sonido(true);
+    } else {
+      st.intentos++;
+      sonido(false);
+      if(st.intentos >= 2){ st.resp = false; st.cerrado = true; }
+      else{
+        est.className = "estado-ej mal";
+        est.textContent = "✘ Aún no. Te queda 1 intento. Revisa signos, paréntesis y exponentes.";
+        actualizaMapa(); return;
+      }
+    }
+    pintaEjercicio(); actualizaMapa();
+    if(estado.every(e=>e.cerrado)){ fanfarria(); setTimeout(()=>irA("resultados"), 800); }
+  };
+  const btnCheck = document.getElementById("btnCheck");
+  if(btnCheck) btnCheck.addEventListener("click", revisar);
+  const inp = document.getElementById("inpResp");
+  if(inp) inp.addEventListener("keydown", e=>{ if(e.key === "Enter" && !inp.disabled) revisar(); });
+
+  /* ver solución */
+  const btnRev = document.getElementById("btnRev");
+  if(btnRev) btnRev.addEventListener("click", ()=>{
+    st.resp = false; st.cerrado = true;
+    if(st.caso === null){ st.caso = false; st.casoElegido = 0; }
+    pintaEjercicio(); actualizaMapa();
+    if(estado.every(e=>e.cerrado)){ setTimeout(()=>irA("resultados"), 800); }
+  });
+  actualizaMapa();
+}
+
+/* mapa de ejercicios */
+const mapa = document.getElementById("mapaEj");
+function actualizaMapa(){
+  mapa.innerHTML = EJ.map((_,i)=>{
+    const e = estado[i];
+    let cls = "punto";
+    if(i === actual) cls += " actual";
+    if(e.cerrado) cls += e.resp ? " bien" : " mal";
+    return `<button class="${cls}" data-i="${i}">${i+1}</button>`;
+  }).join("");
+  mapa.querySelectorAll(".punto").forEach(b=>b.addEventListener("click", ()=>{ actual = +b.dataset.i; pintaEjercicio(); }));
+  document.getElementById("txtPuntos").textContent = `${puntos()} / 56 pts`;
+}
+document.getElementById("btnAnt").addEventListener("click", ()=>{ if(actual>0){actual--; pintaEjercicio();} });
+document.getElementById("btnSig").addEventListener("click", ()=>{ if(actual<27){actual++; pintaEjercicio();} });
+
+function irA(sec){
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("activa", x.dataset.sec === sec));
+  document.querySelectorAll("main section").forEach(s=>s.classList.remove("visible"));
+  document.getElementById("sec-" + sec).classList.add("visible");
+  if(sec === "resultados") pintaResultados();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* ============ RESULTADOS Y NOTA CHILENA ============ */
+function notaChilena(p){ /* p: porcentaje 0-100, exigencia 60% */
+  let n = p >= 60 ? 4 + 3*(p-60)/40 : 1 + 3*p/60;
+  return Math.round(n*10)/10;
+}
+function pintaResultados(){
+  const cerrados = estado.filter(e=>e.cerrado).length;
+  const pts = puntos();
+  const titulo = document.getElementById("tituloRes");
+  const notaEl = document.getElementById("notaGrande");
+  const det = document.getElementById("detalleNota");
+  if(cerrados === 0){
+    titulo.textContent = "Aún no hay ejercicios respondidos";
+    notaEl.textContent = "—"; det.textContent = "Completa la ejercitación para ver tu nota.";
+    document.getElementById("detalleCasos").innerHTML = "";
+    document.getElementById("mensajeFinal").textContent = "";
+    return;
+  }
+  const total = cerrados * 2;
+  const pct = Math.round(pts/total*100);
+  const nota = notaChilena(pct);
+  titulo.textContent = cerrados < 28 ? `Avance parcial: ${cerrados} de 28 ejercicios` : "¡Ejercitación completada!";
+  notaEl.textContent = nota.toFixed(1);
+  notaEl.style.color = nota >= 4 ? "var(--ok)" : "var(--mal)";
+  det.textContent = `${pts} de ${total} puntos (${pct}%) · Escala chilena 1,0 – 7,0 con 60% de exigencia`;
+  /* detalle por caso */
+  let porCaso = {1:[0,0], 2:[0,0], 3:[0,0], 4:[0,0]}; /* [logrados sobre resp, cerrados] */
+  EJ.forEach((ej,i)=>{ const e = estado[i]; if(e.cerrado){ porCaso[ej.caso][1]++; if(e.resp) porCaso[ej.caso][0]++; } });
+  document.getElementById("detalleCasos").innerHTML = [1,2,3,4].map(c=>`
+    <div class="mini-caso" style="--col:${COL_CASO[c]}">
+      <div class="eyebrow" style="--col:${COL_CASO[c]}">Caso ${c} · ${NOMBRE_CASO[c]}</div>
+      <div class="num">${porCaso[c][0]} / ${porCaso[c][1] || 0}</div>
+      <div style="font-size:.8rem; color:var(--tinta-suave);">factorizaciones logradas</div>
+    </div>`).join("");
+  const msj = document.getElementById("mensajeFinal");
+  if(cerrados === 28){
+    if(nota >= 6.0) msj.textContent = "🌟 ¡Excelente! Dominas los 4 casos de factorización.";
+    else if(nota >= 5.0) msj.textContent = "💪 ¡Muy bien! Repasa el caso con más errores y quedarás experto/a.";
+    else if(nota >= 4.0) msj.textContent = "👍 ¡Aprobado! Vale la pena reforzar los casos donde hubo errores.";
+    else msj.textContent = "📚 Sigamos practicando: revisa los ejemplos guiados del caso que más te costó y vuelve a intentarlo.";
+  } else msj.textContent = "Sigue con la ejercitación para completar tu nota final.";
+}
+document.getElementById("btnReiniciar").addEventListener("click", ()=>{
+  estado = EJ.map(()=>({caso:null, resp:null, intentos:0, cerrado:false}));
+  actual = 0; pintaEjercicio(); irA("ejercitacion");
+});
+
+pintaEjercicio();
+</script>
+</body>
+</html>
